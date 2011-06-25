@@ -82,6 +82,20 @@ function onDragEnd(e) {
 function submitMap() {
     var mapJSON = map2JSON();
     alert(mapJSON);
+    jQuery.ajax({
+	url: "http://localhost/disrend/index.php/townguide/queueMap",
+        dataType: "text",
+	data: "\"" + mapJSON + "\"",
+	success: mapSubmitSuccess,
+        error: mapSubmitError
+    });
+}
+
+function mapSubmitSuccess(data, textStatus, jqXHR) {
+    alert("mapSubmitSucess() - " + data + " - " + textStatus);
+}
+function mapSubmitError(jqXHR,textStatus,errorThrown) {
+    alert("mapSubmitError() - " + errorThrown);
 }
 
 function map2JSON() {

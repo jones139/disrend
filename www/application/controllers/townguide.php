@@ -115,7 +115,10 @@ class Townguide extends CI_Controller {
     $this->load->view('footer_view');
   }
 
-
+  public function queueMap()
+  {
+    echo "queueMap()";
+  }
   public function initialise_db()
   {
     echo 'initialise_db';
