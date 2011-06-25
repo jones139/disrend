@@ -3,6 +3,9 @@
 
 
 <div id="controlSidebar">
+   <div>
+   Title:  <input type="text" id="titleText"/>
+   </div>
    <div id="heightControls" style="background-color:#a0a0a0;">
        <div id="heightDiv">height</div>
        <button type="button" id="increaseHeightButton">+</button>
@@ -14,19 +17,21 @@
    Image Height (mm) <input type="text" id="imgHeight">
    <br/>
    Image Resolution (dpi) <select id="imgResSelect">
-       <option>92 dpi (web)</option>
-       <option>300 dpi (normal print output)</option>
-       <option>600 dpi (high quality print output)</option>
+       <option value="92">92 dpi (web)</option>
+       <option value="300">300 dpi (normal print output)</option>
+       <option value="600">600 dpi (high quality print output)</option>
    </select>
    </div>
    <div id="styleControls" style="background-color:#d0d0d0;">
       Style 
       <select id="styleSelect">
-           <option>Standard OSM Style</option>
-           <option>Kefalonia Map Style</option>
+           <option value="1">Standard OSM Style</option>
+           <option value="2">Kefalonia Map Style</option>
       </select>
       <br/>
-   Contours:  <input type="checkbox" id="contoursCheckbox"/>
+      Contours:  <input type="checkbox" id="contoursCheckbox"/>
+      <br/>
+      Grid:  <input type="checkbox" id="gridCheckbox"/>
    </div>
    <div id="submitControls">
       <button id="submitButton">Create Map</button>
