@@ -81,13 +81,17 @@ function onDragEnd(e) {
 //
 function submitMap() {
     var mapJSON = map2JSON();
-    alert(mapJSON);
+    //alert(mapJSON);
+    var data = new Object;
+    data.json = mapJSON;
+    //data["test"] = "test";
+    //alert(data.json);
     jQuery.ajax({
-	url: "http://localhost/disrend/index.php/townguide/queueMap",
-        dataType: "text",
-	data: "\"" + mapJSON + "\"",
-	success: mapSubmitSuccess,
-        error: mapSubmitError
+		url: "http://localhost/disrend/index.php/townguide/queueMap",
+		type: "POST",
+		data: data,
+		success: mapSubmitSuccess,
+    	error: mapSubmitError
     });
 }
 

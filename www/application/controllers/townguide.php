@@ -117,8 +117,22 @@ class Townguide extends CI_Controller {
 
   public function queueMap()
   {
-    echo "queueMap()";
+	$data=$_POST;
+	$retStr = "queueMap() - ";
+	$n=0;
+    #foreach ($data as $k=>$v) {
+   # 	$n=$n+1;
+   #    $retStr = $retStr . $n . $k . "=>" . $v;	
+	#}
+	
+	$json = json_decode($data["json"]);
+	foreach ($json as $k=>$v) {
+		$retStr = $retStr . $k . "=>" . $v;
+	}
+ 	echo $retStr;
   }
+ 
+ 
   public function initialise_db()
   {
     echo 'initialise_db';
