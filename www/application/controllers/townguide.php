@@ -9,7 +9,7 @@ class Townguide extends CI_Controller {
     $this->load->helper('url');
     $this->load->helper('form');
     $this->load->database();
-    $this->load->model('queue_model');
+    $this->load->model('JobQueue_model');
     $this->load->model('users_model');
     $this->load->model('mapspecs_model');
     //echo "base URL=".base_url().".";
@@ -33,7 +33,7 @@ class Townguide extends CI_Controller {
     $this->load->view('header_view');
     $this->load->view('editmap_view');
      $this->load->view('footer_view');
-    $this->queue_model->add_job(1,1);
+    $this->JobQueue_model->add_job(1,1);
   }
   public function editmap($mapno=-1)
   {
@@ -73,7 +73,7 @@ class Townguide extends CI_Controller {
   public function deletemap($job_id)
   {
     $data['job_id']=$job_id;
-    $this->queue_model->delete_job($job_id);
+    $this->JobQueue_model->delete_job($job_id);
     $this->load->view('header_view');
     $this->load->view('confirm_delete_view',$data);
     $this->load->view('footer_view');
@@ -82,7 +82,7 @@ class Townguide extends CI_Controller {
   public function retry_job($job_id)
   {
     $data['job_id']=$job_id;
-    $this->queue_model->retry_job($job_id);
+    $this->JobQueue_model->retry_job($job_id);
     $this->load->view('header_view');
     $this->load->view('confirm_retry_job_view',$data);
     $this->load->view('footer_view');
@@ -99,7 +99,7 @@ class Townguide extends CI_Controller {
 
   public function listqueue()
   {
-    $data['query'] = $this->queue_model->get_jobs();;
+    $data['query'] = $this->JobQueue_model->get_jobs();;
 
     $this->load->view('header_view',$data);
     $this->load->view('listqueue_view',$data);
@@ -137,7 +137,7 @@ class Townguide extends CI_Controller {
   {
     echo 'initialise_db';
     // Initialise the queue table
-    $sql = $this->queue_model->get_initialise_sql();
+    $sql = $this->JobQueue_model->get_initialise_sql();
     echo $sql;
     mysql_query($sql) or die(mysql_error());
 

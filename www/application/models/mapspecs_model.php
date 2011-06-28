@@ -22,7 +22,7 @@ class Mapspecs_model extends CI_Model {
        * List all mapspecs
        */
     {
-      $query = $this->db->get('mapspecs');
+      $query = $this->db->get('MapSpecs');
       return $query;
     }
 
@@ -32,7 +32,7 @@ class Mapspecs_model extends CI_Model {
        */
     {
       $this->db->where('map_id',$map_id);
-      $query = $this->db->get('mapspecs');
+      $query = $this->db->get('MapSpecs');
       return $query->first_row('array');
     }
 
@@ -51,7 +51,7 @@ class Mapspecs_model extends CI_Model {
         $this->size_x = $size_y;
         $this->size_y = $size_y;
 
-        $this->db->insert('mapspecs', $this);
+        $this->db->insert('MapSpecs', $this);
     }
 
     function update_map($map_id,
@@ -70,23 +70,24 @@ class Mapspecs_model extends CI_Model {
 	if ($size_y!='') $data['size_y']=$size_y;
 
 	$this->db->where('map_id',$user_id);
-	$this->db->update('mapspecs',$data);
+	$this->db->update('MapSpecs',$data);
     }
 
 
    function get_initialise_sql()
     {
-      $sql = "create table if not exists `mapspecs`"
-	. " ( `map_id` int(11) not null auto_increment primary key,"
-	. "`map_title` varchar(128),"
-	. "`map_description` varchar(512),"
-	. "`map_renderer` int(11),"
-	. "`style_id` int(11),"
-	. "`bbox_lon_min` double,"
-	. "`bbox_lat_min` double,"
-	. "`size_x` double,"
-	. "`size_y` double"
-	. ")";
+   		$sql = "create table if not exists `MapSpecs` ( 
+		`id` int(11) not null auto_increment primary key,
+		`title` varchar(128),
+		`description` varchar(512),
+		`mapRendererId` int(11),
+		`styleId` int(11),
+		`bboxLonMin` double,
+		`bboxLatMin` double,
+		`bboxLonMax` double,
+		`bboxLatMax` double,
+		`mapSpec` text
+		);";
       return $sql;
     }
  

@@ -11,7 +11,7 @@
 
    <tr>
    <?php 
-   echo "<td>".$row->job_id."</td>";
+   echo "<td>".$row->id."</td>";
    echo "<td>";
    switch ($row->status) {
    case 0:
@@ -31,8 +31,8 @@
   }
   echo "</td>";
 echo "<td>".$row->submit_time."</td>";
-  echo "<td>".anchor("townguide/deletemap/".$row->job_id,"Delete");
-  echo ", ".anchor("townguide/retry_job/".$row->job_id,"Re-Try")."</td>";
+  echo "<td>".anchor("townguide/deletemap/".$row->id,"Delete");
+  echo ", ".anchor("townguide/retry_job/".$row->id,"Re-Try")."</td>";
 ?>
 </tr>
 <?php endforeach;?>
