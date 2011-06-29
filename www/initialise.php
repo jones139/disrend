@@ -127,7 +127,7 @@
 		echo "<h2>Initialise SymbolSets table</h2>";
 		$sql = "drop table if exists SymbolSets;";
 		mysql_query($sql) or die(mysql_error());
-				$sql = "create table if not exists `SymbolSets` ( 
+		$sql = "create table if not exists `SymbolSets` ( 
 		`id` int(11) not null auto_increment primary key,
 		`userId` int(11) default 0,
 		`description` varchar(512),
@@ -150,6 +150,21 @@
 		);";
 		echo "<p>" . $sql . "</p>";
 		mysql_query($sql) or die(mysql_error());
+						
+		// Initialise the GPXFiles table
+		echo "<h2>Initialise GPXFiles table</h2>";
+		$sql = "drop table if exists GPXFiles;";
+		mysql_query($sql) or die(mysql_error());
+		$sql = "create table if not exists `GPXFiles` ( 
+		`id` int(11) not null auto_increment primary key,
+		`userId` int(11) default 0,
+		`description` varchar(512),
+		`GPXFile` blob
+		);";
+		echo "<p>" . $sql . "</p>";
+		mysql_query($sql) or die(mysql_error());
+								
+						
 						
 		echo "<h1>Database Intialisation Complete!!!</h1>";
 						
