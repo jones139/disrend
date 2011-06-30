@@ -18,7 +18,7 @@ class gpxfiles extends CI_Controller {
 		$this -> list_gpxfiles();
 	}
 
-	public function edit_gpxfile($id =null) {
+	public function edit($id =null) {
 		/**
 		 * if $id is not null, we populate the form from the database
 		 * and display it to the user.
@@ -49,12 +49,69 @@ class gpxfiles extends CI_Controller {
 	}
 
 	public function list_gpxfiles() {
-		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles(); ;
+		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
 		$this -> load -> view('header_view', $data);
 		$this -> load -> view('gpx_list_gpxfiles', $data);
 
 		$this -> load -> view('footer_view');
 
+	}
+	
+	public function upload() {
+	    $data['data']='data';
+		var_dump($_POST);
+		$this -> load -> view('header_view', $data);
+		if($this -> input -> post('submit')) {
+			echo "processing submit data.";
+			foreach($_POST as $key => $value) {
+				$post_data[$key] = $this -> input -> post($key);
+			}
+
+			$config['upload_path'] = './application/media/gpx';
+			$config['allowed_types'] = '*';
+			$config['max_size']	= 0;
+			$this->load->library('upload');
+			
+			$this->upload->initialize($config);
+
+			if ( ! $this->upload->do_upload())
+			{
+				echo "error uploading file";
+				echo $this->upload->display_errors();
+				$error = array('error' => $this->upload->display_errors());
+				$this->load->view('gpx_upload_form', $error);
+			}
+			else
+			{
+				echo "file upload success";
+				$data = array('upload_data' => $this->upload->data());
+				$gpx = file_get_contents($data['upload_data']['full_path']);
+				$data['gpx'] = $gpx;
+				if ($gpx != NULL) {
+					if ($this->session->userdata('logged_in')==1) {
+			  			$userId=$this->session->userdata('user_id');
+					} else {
+						$userId = 0;
+					}
+					$desc=$this -> input -> post('description');
+					$this->gpxfiles_model->add_gpxfile($userId,$desc,$gpx);
+				    $this->load->view('gpx_upload_success', $data);
+				}
+				else {
+					$error['error']="Failed to read file contents";
+					$this->load->view('gpx_upload_form',$error);
+				}
+			}
+			#$data['data']='data';
+			#$this -> load -> view('gpx_upload_success', $data);
+		}
+		else {
+			echo "no submit data - showing form....";
+			$data['error']='no error';
+			$this -> load -> view('gpx_upload_form', $data);
+		}
+
+		$this -> load -> view('footer_view');
 	}
 
 }?>

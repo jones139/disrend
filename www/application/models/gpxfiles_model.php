@@ -45,7 +45,7 @@ class GPXFiles_model extends CI_Model {
 	$GPXFile
 	)
 	{
-	$this->user_id = $user_id;
+	$this->userId = $user_id;
 	$this->description = $description;
 	$this->GPXFile = $GPXFile;
 

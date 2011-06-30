@@ -9,7 +9,7 @@
    <tr>
    <?php 
    echo "<td>".
-   anchor("gpxfiles/edit_gpxfile/".$row->id,$row->id)."</td>";
+   anchor("gpxfiles/edit/".$row->id,$row->id)."</td>";
    echo "<td>".$row->description."</td>";
 ?>
 </tr>
