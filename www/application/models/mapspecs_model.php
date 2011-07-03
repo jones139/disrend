@@ -1,7 +1,7 @@
 <?php 
 class Mapspecs_model extends CI_Model {
 
-    var $map_id   = '';
+    var $id   = '';
     var $map_title = '';
     var $map_description='';
     var $map_renderer     = '';
@@ -26,12 +26,12 @@ class Mapspecs_model extends CI_Model {
       return $query;
     }
 
-    function get_mapspec_by_id($map_id)
+    function get_mapspec_by_id($id)
       /** 
-       * get the details of map number map_id - returned as an array;
+       * get the details of map number id - returned as an array;
        */
     {
-      $this->db->where('map_id',$map_id);
+      $this->db->where('id',$id);
       $query = $this->db->get('MapSpecs');
       return $query->first_row('array');
     }
@@ -54,7 +54,7 @@ class Mapspecs_model extends CI_Model {
         $this->db->insert('MapSpecs', $this);
     }
 
-    function update_map($map_id,
+    function update_map($id,
 		     $map_renderer,
 		     $style_id,
 		     $bbox_lon_min,
@@ -69,7 +69,7 @@ class Mapspecs_model extends CI_Model {
 	if ($size_x!='') $data['size_x']=$size_x;
 	if ($size_y!='') $data['size_y']=$size_y;
 
-	$this->db->where('map_id',$user_id);
+	$this->db->where('id',$user_id);
 	$this->db->update('MapSpecs',$data);
     }
 

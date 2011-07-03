@@ -1,4 +1,8 @@
 <h1>List Mapspecs</h1>
+
+<p>
+	<a href="edit_mapspec">Create New MapSpec</a> 
+</p>
 <table border="1">
    <tr>
    <th>Mapspec No</th> 

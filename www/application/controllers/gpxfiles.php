@@ -35,16 +35,32 @@ class gpxfiles extends CI_Controller {
 			}
 			$id = $this -> input -> post('id');
 			$data = $post_data;
+			$this-> gpxfiles_model -> update_gpxfile(
+				$data['id'],
+				$data['userId'],
+				$data['description'],
+				$data['GPXFile']);
+				$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
+				$this -> load -> view('gpx_list_gpxfiles.php', $data);
 		} else {
 			if($id == null) {
 				$data = $this -> gpxfiles_model -> get_default_gpxfile();
+       			$data['userId'] = $this->session->userdata('user_id');
+				$data['uname']= $this->users_model -> get_uname_by_id($data['userId']);
 			} else {
-				$data = $this -> gpxfiles_model -> get_gpxfile_by_id($id);
-
+				$data = $this -> gpxfiles_model -> get_gpxfile($id);
+				if (isset($data['userId'])) {
+					$data['uname']= $this->users_model -> get_username_by_id($data['userId']);
+					$this->load->view('gpx_edit_gpxfile',$data);
+				}
+				else {
+					echo "Error - userId does not exist....";
+					redirect($this->list_gpxfiles());
+				}
 			}
+			#var_dump($data);
 		}
-		var_dump($data);
-		$this -> load -> view('gpx_edit_gpxfile.php', $data);
+		#var_dump($data);
 		$this -> load -> view('footer_view');
 	}
 
@@ -55,6 +71,11 @@ class gpxfiles extends CI_Controller {
 
 		$this -> load -> view('footer_view');
 
+	}
+	
+	public function get_gpxfile($id) {
+		$query = $this -> gpxfiles_model -> get_gpxfile($id);
+		echo $query['GPXFile'];
 	}
 	
 	public function upload() {

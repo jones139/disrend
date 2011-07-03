@@ -1,0 +1,24 @@
+Disrend Things to Do List
+=========================
+
+This is the to-do list o get disrend to a functioning system.
+Web front end
+=============
+- 	Make sure the GPX upload and retrieving works both for web pages and via AJAX, 
+	requiring login to upload, but anyone can download.
+-	Duplicate the GPX code to work with symbol sets.
+-   Duplicate the GPX code to work with style file archives.
+-   Develop javascript user interface to specify mapspecs.
+-   set up codeigniter framework for mapspecs.
+-   Set up codeigniter framework for job queue, including uploading and listing completed jobs.
+-   Make it look nice - CSS needs some work!
+
+Render Daemon
+=============
+-   Get twisd looping working.
+-   Download job from server.
+-   Spawn separate process to render job.
+-   Monitor running jobs for completion or failure.
+-   Update server with job status.
+-   Upload completed job output to server.
+

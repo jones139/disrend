@@ -33,6 +33,23 @@ class Users_model extends CI_Model {
       return $query->first_row('array');
     }
 
+    function get_username_by_id($user_id)
+      /** 
+       * get the user name of user number user_id;
+       */
+    {
+      $this->db->where('user_id',$user_id);
+      $query = $this->db->get('users');
+	  $row = $query->first_row('array');
+		if ($row != NULL) {
+	  		$uname = $row['uname'];
+		} else {
+			$uname = "Anonymous";
+		}
+      return $uname;
+    }
+
+
     function get_user_by_uname($uname)
       /** 
        * get the details of user number user name - returned as an array;

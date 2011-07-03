@@ -44,7 +44,7 @@ map_id = <?php if (isset($map_id)) echo $map_id; else echo -1; ?>;
     ********************************************************
 -->
 <h2>Fill in the form in each tab in turn to create your map.</h2>
-<form method="post" action="mapspecs/update_mapspec"
+<form method="post" action="edit_mapspec"
       enctype="multipart/form-data">
   <div id="tabs">
     <ul>

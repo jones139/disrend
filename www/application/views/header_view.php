@@ -11,6 +11,7 @@
        <?php echo anchor("townguide/newmap","Create New Map").",";?>
        <?php echo anchor("townguide/listqueue","List Queue").",";?>
        <?php echo anchor("mapspecs/list_mapspecs","List MapSpecs");?>
+       <?php echo anchor("gpxfiles/list_gpxfiles","GPX Files");?>
    <?php 
       $role = $this->session->userdata('role');
       if ($role==2) {

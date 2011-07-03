@@ -21,7 +21,7 @@ class GPXFiles_model extends CI_Model {
       return $query;
     }
 
-    function get_gpxfile_by_id($id)
+    function get_gpxfile($id)
       /** 
        * retrieve gpxfile number $id - returned as an array;
        */
@@ -57,7 +57,7 @@ class GPXFiles_model extends CI_Model {
 		     $description,
 		     $GPXFile)
     {
-	if ($user_id!='') $data['user_id']=$user_id;
+	if ($user_id!='') $data['userId']=$user_id;
 	if ($description!='') $data['description']=$description;
 	if ($GPXFile!='') $data['GPXFile']=$GPXFile;
 
