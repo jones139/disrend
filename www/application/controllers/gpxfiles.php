@@ -55,7 +55,8 @@ class gpxfiles extends CI_Controller {
 				}
 				else {
 					echo "Error - userId does not exist....";
-					redirect($this->list_gpxfiles());
+					$data['errmsg'] = "Invalid GPX File ID";
+					redirect('/gpxfiles/list_gpxfiles');
 				}
 			}
 			#var_dump($data);
