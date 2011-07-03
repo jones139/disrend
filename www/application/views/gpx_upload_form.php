@@ -4,7 +4,7 @@
 </head>
 <body>
 
-<h5><?php echo $error; ?></h5>
+<h5><?php if (isset($error)) echo $error; ?></h5>
 
 <?php echo form_open_multipart('gpxfiles/upload'); ?>
 

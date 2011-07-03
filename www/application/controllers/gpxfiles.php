@@ -27,7 +27,7 @@ class gpxfiles extends CI_Controller {
 		 * If $id is null and there is no POST data, we create a new gpxfile
 		 * spec.
 		 */
-		$this -> load -> view('header_view');
+#		$this -> load -> view('header_view');
 
 		if($this -> input -> post('submit')) {
 			foreach($_POST as $key => $value) {
@@ -41,7 +41,8 @@ class gpxfiles extends CI_Controller {
 				$data['description'],
 				$data['GPXFile']);
 				$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
-				$this -> load -> view('gpx_list_gpxfiles.php', $data);
+				$viewdata = array('data'=>$data,'main_content'=>'gpx_list_gpxfiles');
+				$this -> load -> view('include/site_template', $viewdata);
 		} else {
 			if($id == null) {
 				$data = $this -> gpxfiles_model -> get_default_gpxfile();
@@ -51,27 +52,26 @@ class gpxfiles extends CI_Controller {
 				$data = $this -> gpxfiles_model -> get_gpxfile($id);
 				if (isset($data['userId'])) {
 					$data['uname']= $this->users_model -> get_username_by_id($data['userId']);
-					$this->load->view('gpx_edit_gpxfile',$data);
+					$viewdata = array('data'=>$data,'main_content'=>'gpx_edit_gpxfile');
+					$this->load->view('include/site_template',$viewdata);
 				}
 				else {
-					echo "Error - userId does not exist....";
-					$data['errmsg'] = "Invalid GPX File ID";
-					redirect('/gpxfiles/list_gpxfiles');
+					#echo "Error - userId does not exist....";
+					$data = array('title'=>'Error','msg'=> "Invalid GPX File ID");
+					$viewdata = array('main_content'=>'message_view','data'=>$data);
+					$this->load->view('include/site_template',$viewdata);
 				}
 			}
 			#var_dump($data);
 		}
 		#var_dump($data);
-		$this -> load -> view('footer_view');
+#		$this -> load -> view('footer_view');
 	}
 
 	public function list_gpxfiles() {
 		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
-		$this -> load -> view('header_view', $data);
-		$this -> load -> view('gpx_list_gpxfiles', $data);
-
-		$this -> load -> view('footer_view');
-
+		$viewdata = array('main_content'=>'gpx_list_gpxfiles','data'=>$data);
+		$this -> load -> view('include/site_template', $viewdata);
 	}
 	
 	public function get_gpxfile($id) {
@@ -80,9 +80,8 @@ class gpxfiles extends CI_Controller {
 	}
 	
 	public function upload() {
-	    $data['data']='data';
+	    #$data['data']='data';
 		var_dump($_POST);
-		$this -> load -> view('header_view', $data);
 		if($this -> input -> post('submit')) {
 			echo "processing submit data.";
 			foreach($_POST as $key => $value) {
@@ -101,7 +100,8 @@ class gpxfiles extends CI_Controller {
 				echo "error uploading file";
 				echo $this->upload->display_errors();
 				$error = array('error' => $this->upload->display_errors());
-				$this->load->view('gpx_upload_form', $error);
+				$viewdata = array('main_content'=>'gpx_upload_form', 'data'=>$error);
+				$this->load->view('include/site_template', $viewdata);
 			}
 			else
 			{
@@ -117,11 +117,13 @@ class gpxfiles extends CI_Controller {
 					}
 					$desc=$this -> input -> post('description');
 					$this->gpxfiles_model->add_gpxfile($userId,$desc,$gpx);
-				    $this->load->view('gpx_upload_success', $data);
+					$viewdata= array('main_content'=>'gpx_upload_success','data'=>$data);
+				    $this->load->view('include/site_template', $viewdata);
 				}
 				else {
 					$error['error']="Failed to read file contents";
-					$this->load->view('gpx_upload_form',$error);
+					$viewdata = array('main_content'=>'gpx_upload_form','data'=>$error);
+					$this->load->view('include/site_template',$viewdata);
 				}
 			}
 			#$data['data']='data';
@@ -130,10 +132,9 @@ class gpxfiles extends CI_Controller {
 		else {
 			echo "no submit data - showing form....";
 			$data['error']='no error';
-			$this -> load -> view('gpx_upload_form', $data);
+			$viewdata = array('main_content'=>'gpx_upload_form','data',$data);
+			$this -> load -> view('include/site_template', $viewdata);
 		}
-
-		$this -> load -> view('footer_view');
 	}
 
 }?>

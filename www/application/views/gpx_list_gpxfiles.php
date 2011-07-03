@@ -4,6 +4,7 @@
 if (isset($errmsg)) {
 	echo '<h2>' . $errmsg . '</h2>';
 }
+?>
 
 <p><a href="upload">Upload GPX File</a></p>
 <table border="1">
