@@ -9,13 +9,15 @@ echo form_error('uname');
 echo "<input type='text' name='uname' value='".$uname."' size='20'>";
 echo "<br/>";
 
-echo form_label("Password:");
 echo form_error('password');
+echo "<br/>";
+echo form_label("Password:");
 echo "<input type='password' name='password' value='' size='20'>";
 echo "<br/>";
 
-echo form_label("Confirm Password:");
 echo form_error('passconf'); 
+echo "<br/>";
+echo form_label("Confirm Password:");
 echo "<input type='password' name='passconf' value='' size='20'>";
 echo "<br/>";
 

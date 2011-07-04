@@ -120,7 +120,7 @@ class Users_model extends CI_Model {
 	}
       else 
 	{
-	  echo "user_id ".$user_id." not found";
+	  #echo "user_id ".$uname." not found";
 	  return FALSE;
 	}
     }
@@ -165,6 +165,24 @@ class Users_model extends CI_Model {
       }
       return $roleText;
     }
+	
+		public function isValidUser() {
+		if($this -> session -> userdata('logged_in') && 
+		($this ->session -> userdata('role') >= 1)) 
+			return TRUE;
+		 else 
+			return FALSE;
+	}
+
+		public function isValidAdmin() {
+		if($this -> session -> userdata('logged_in') && 
+		($this ->session -> userdata('role') >= 2)) 
+			return TRUE;
+		 else 
+			return FALSE;
+	}
+	
+		
 
    function get_initialise_sql()
     {

@@ -30,12 +30,7 @@ class login extends CI_Controller {
 			$passwd = $this -> input -> post('passwd');
 			//echo "validate_login: uname=".$uname." passwd=".$passwd.".";
 			if($this -> users_model -> validate_user($uname, $passwd) == TRUE) {
-				$userdata = $this -> users_model -> get_user_by_uname($uname);
-				$session_data['uname'] = $uname;
-				$session_data['user_id'] = $userdata['user_id'];
-				$session_data['role'] = $userdata['role'];
-				$session_data['logged_in'] = TRUE;
-				$this -> session -> set_userdata($session_data);
+				$this->setSessionData($uname);
 				#$this->load->view('header_view');
 				$data['main_content'] = 'login_validate_success';
 				$this -> load -> view('include/site_template', $data);
@@ -49,6 +44,16 @@ class login extends CI_Controller {
 		#    $this->load->view('footer_view');
 	}
 
+	private function setSessionData($uname) {
+		# Set the data stored in the current session to reflect user name $uname
+		$userdata = $this -> users_model -> get_user_by_uname($uname);
+		$session_data['uname'] = $uname;
+		$session_data['user_id'] = $userdata['user_id'];
+		$session_data['role'] = $userdata['role'];
+		$session_data['logged_in'] = TRUE;
+		$this -> session -> set_userdata($session_data);
+	}
+
 	public function logout() {
 		$session_data['uname'] = "";
 		$session_data['logged_in'] = FALSE;
@@ -57,10 +62,10 @@ class login extends CI_Controller {
 		$this -> session -> set_userdata($session_data);
 		$this -> session -> sess_destroy();
 
-		$data['main_content'] = 'message_view';
+		$data['main_content'] = 'login_form_view';
 		$data['data'] = array(
 			'title'=>'Logout',
-			'msg' => "You have logged out successfully...."
+			'errmsg' => "You have logged out successfully...."
 			);
 		$this -> load -> view('include/site_template', $data);
 
@@ -92,7 +97,8 @@ class login extends CI_Controller {
 			if($this -> users_model -> uname_available($uname)) {
 				// user name available - create username.
 				$this -> users_model -> add_user($uname, $passwd, $full_name, $email, $role);
-				$data['main_content'] = 'login_register_success';
+				$data['main_content'] = 'login_form_view';
+				$data['errmsg'] = "You have registered successfully - please log in...";
 				$this -> load -> view('include/site_template', $data);
 			} else {
 				// invalid user name
@@ -158,6 +164,7 @@ class login extends CI_Controller {
 			$role = $this -> input -> post('role');
 			// user name available - create username.
 			$this -> users_model -> update_user($user_id, $uname, $passwd, $full_name, $email, $role);
+			$this ->setSessionData($uname);
 			$data['main_content'] = 'message_view';
 			$data['data'] = array(
 					'title'=>'User Data Updated',
@@ -182,6 +189,14 @@ class login extends CI_Controller {
 		}
 		#    $this->load->view('footer_view');
 
+	}
+
+	public function isValidUser() {
+		if($this -> session -> userdata('logged_in') && 
+		($this ->session -> userdata('role') >= 1)) 
+			return TRUE;
+		 else 
+			return FALSE;
 	}
 
 }?>
