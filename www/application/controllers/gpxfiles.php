@@ -28,9 +28,16 @@ class gpxfiles extends CI_Controller {
 		 * spec.
 		 */
 		#		$this -> load -> view('header_view');
+		if (isset($id)) {
+			$gpxfile = $this -> gpxfiles_model -> get_gpxfile($id);
+			$file_user_id = $gpxfile['userId'];
+			$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+		} else
+			$file_uname = null;
 
-		if(!$this -> users_model -> isValidUser()) {
-			$data = array('title' => 'Error', 'msg' => "Please log in to edit a file.");
+		if(!$this -> users_model -> isValidNamedUser($file_uname) && 
+			!$this -> users_model -> isValidAdmin()) {
+			$data = array('title' => 'Error', 'msg' => "You must be logged in as the owner of the file, or as an Administrator to edit a file.");
 			$viewdata = array('main_content' => 'message_view', 'data' => $data);
 			$this -> load -> view('include/site_template', $viewdata);
 

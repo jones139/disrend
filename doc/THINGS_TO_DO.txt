@@ -5,7 +5,7 @@ This is the to-do list o get disrend to a functioning system.
 Web front end
 =============
 - 	Make sure the GPX upload and retrieving works both for web pages and via AJAX, 
-	requiring login to upload, but anyone can download.
+	requiring login to upload or edit, but anyone can list and download.   [Works via web - need to test with AJAX]
 -	Duplicate the GPX code to work with symbol sets.
 -   Duplicate the GPX code to work with style file archives.
 -   Develop javascript user interface to specify mapspecs.

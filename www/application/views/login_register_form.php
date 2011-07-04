@@ -10,22 +10,26 @@
 
 <?php echo form_open('login/register'); ?>
 
-<h5>Username</h5>
+<label for="uname">User Name:</label> 
+<input type="text" name="uname" value="<?php echo set_value('uname'); ?>" size="20" />
 <?php echo form_error('uname'); ?>
-<input type="text" name="uname" value="<?php echo set_value('uname'); ?>" size="50" />
+<br/>
 
-<h5>Password</h5>
+<label for="password">Password:</label> 
+<input type="password" name="password" value="<?php echo set_value('password'); ?>" size="20" />
 <?php echo form_error('password'); ?>
-<input type="password" name="password" value="<?php echo set_value('password'); ?>" size="50" />
+<br/>
 
-<h5>Password Confirm</h5>
+<label for="passconf">Confirm Password:</label> 
+<input type="password" name="passconf" value="<?php echo set_value('passconf'); ?>" size="20" />
 <?php echo form_error('passconf'); ?>
-<input type="password" name="passconf" value="<?php echo set_value('passconf'); ?>" size="50" />
+<br/>
 
-<h5>Email Address</h5>
+<label for="email">Email Address:</label> 
+<input type="text" name="email" value="<?php echo set_value('email'); ?>" size="30" />
 <?php echo form_error('email'); ?>
-<input type="text" name="email" value="<?php echo set_value('email'); ?>" size="50" />
+<br/>
 
-<div><input type="submit" value="Submit" /></div>
+<input type="submit" value="Submit" />
 
 </form>

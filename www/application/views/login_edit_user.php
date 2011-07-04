@@ -3,10 +3,10 @@ echo "<h1>Edit User Data</h1>";
 echo validation_errors();
 echo form_open('login/edit_user');
 echo form_fieldset("Edit User_ID ".$user_id);
-echo form_hidden('user_id',$user_id);
+echo form_hidden('user_id',$user_id,"readonly");
 echo form_label("Username:");
 echo form_error('uname');
-echo "<input type='text' name='uname' value='".$uname."' size='20'>";
+echo "<input type='text' name='uname' value='".$uname."' size='20' readonly>";
 echo "<br/>";
 
 echo form_error('password');

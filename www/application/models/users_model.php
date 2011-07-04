@@ -167,14 +167,38 @@ class Users_model extends CI_Model {
     }
 	
 		public function isValidUser() {
+			/**
+			 * Returns TRUE if the user is logged in and the account is not deactivated.
+			 */
 		if($this -> session -> userdata('logged_in') && 
 		($this ->session -> userdata('role') >= 1)) 
 			return TRUE;
 		 else 
 			return FALSE;
 	}
+	
+		public function isValidNamedUser($uname) {
+			/**
+			 * Returns TRUE if the user is logged in as the named user name, and the 
+			 * account is not deactivated.
+			 */
+		if($this -> session -> userdata('logged_in') && 
+		($this ->session -> userdata('role') >= 1) &&
+		($this -> session -> userdata('uname') == $uname)) {
+			#echo 'isValidNamedUser() - ' . $this->session->userdata('uname') . '  ' . $uname;
+			return TRUE;
+		}
+		 else {
+		 	#echo 'isValidNamedUser() - FALSE - ' . $this->session->userdata('uname') . '  ' . $uname;
+			return FALSE;
+		 }
+	}
+		
 
 		public function isValidAdmin() {
+			/**
+			 * Returns TRUE if the user is logged in to a valid administrator account.
+			 */
 		if($this -> session -> userdata('logged_in') && 
 		($this ->session -> userdata('role') >= 2)) 
 			return TRUE;
