@@ -65,6 +65,9 @@ class GPXFiles_model extends CI_Model {
 	$this->db->update('GPXFiles',$data);
     }
 
+	function delete($id) {
+		$this->db->delete('GPXFiles',array('id'=>$id));
+	}
 
    function get_initialise_sql()
     {

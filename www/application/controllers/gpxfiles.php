@@ -77,6 +77,32 @@ class gpxfiles extends CI_Controller {
 		}
 	}
 
+	public function delete($id) {
+		/**
+		 * Delete gpx file number $id.
+		 * Must be logged in as the owner of the file or an administrator to do this.
+		 */
+		if (isset($id)) {
+			$gpxfile = $this -> gpxfiles_model -> get_gpxfile($id);
+			$file_user_id = $gpxfile['userId'];
+			$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+		} else
+			$file_uname = null;
+
+		if(!$this -> users_model -> isValidNamedUser($file_uname) && 
+			!$this -> users_model -> isValidAdmin()) {
+			$data = array('title' => 'Error', 
+				'msg' => "You must be logged in as the owner of the file, "
+				."or as an Administrator to delete a file.");
+			$viewdata = array('main_content' => 'message_view', 'data' => $data);
+			$this -> load -> view('include/site_template', $viewdata);
+
+		} else {
+			$this->gpxfiles_model->delete($id);
+			$this->list_gpxfiles();
+		}
+	}
+
 	public function list_gpxfiles() {
 		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
 		$viewdata = array('main_content' => 'gpx_list_gpxfiles', 'data' => $data);
