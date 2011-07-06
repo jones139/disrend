@@ -36,35 +36,51 @@ if(isset($errmsg)) {
 
 
 <?php 		$this -> load -> helper('url');?>
+
+<!-- 
+	Import the jQuery and jQuery-UI libraries to help with the javascript based
+	user interface
+-->
+
+
+<link type="text/css" href="<?php echo base_url();?>application/media/css/smoothness/jquery-ui-1.8.2.css" rel="Stylesheet" />	
 <script type="text/javascript" 
 	src="<?php echo base_url();?>application/media/js/jquery-1.4.2.min.js">
 </script>
 <script type="text/javascript" 
 	src="<?php echo base_url();?>application/media/js/jquery-ui-1.8.6.custom.min.js">
 	</script>
-<script type="text/javascript">
-	$(".deletebutton").click(showConfirm);
 
-	function showConfirm(e) {
+
+
+<!--
+	Javascript, using jQuery-UI to show a confirm dialog box for the 'Delete' buttons.
+-->
+<script type="text/javascript">
+	$("#dialog-confirm").hide();
+	$(".deletebutton").click(confirmDelete);
+
+	function confirmDelete(e) {
+		file_id = $(this).val();
 		//alert("alert - " + e.pageX + ' ' + e.pageY + ' val=' . e.target);
 		$( "#dialog-confirm" ).dialog({
 			resizable: false,
-			height:140,
+			height:200,
 			modal: true,
 			buttons: {
-				"GPX File?": function() {
-					alert("Deleting File " + $(this).val());
+				Cancel: function() {
+					//alert("Ok - Leaving it alone");
 					$( this ).dialog( "close" );
 				},
-				Cancel: function() {
-					alert("Ok - Leaving it alone");
+				"Delete?": function() {
+					//alert("file_id="+file_id);
+					href_url = "delete/"+file_id;
 					$( this ).dialog( "close" );
+					//alert("Deleting File using url: " + href_url);
+					window.location.href=href_url;
 				}
 			}
 		});
 	}
 
-	function deleteButtonClicked() {
-		alert("deleteButtonClicked");
-	}
 </script>

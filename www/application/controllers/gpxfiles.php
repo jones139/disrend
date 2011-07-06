@@ -30,12 +30,21 @@ class gpxfiles extends CI_Controller {
 		#		$this -> load -> view('header_view');
 		if (isset($id)) {
 			$gpxfile = $this -> gpxfiles_model -> get_gpxfile($id);
-			$file_user_id = $gpxfile['userId'];
-			$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+			if (isset($gpxfile)) {
+				$file_user_id = $gpxfile['userId'];
+				$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+			} else
+				$file_uname = NULL;
 		} else
 			$file_uname = null;
 
-		if(!$this -> users_model -> isValidNamedUser($file_uname) && 
+		if ($file_uname == NULL) {
+			$data = array('title' => 'Error', 
+				'msg' => "You must specify a valid GPX File ID to edit it!");
+			$viewdata = array('main_content' => 'message_view', 'data' => $data);
+			$this -> load -> view('include/site_template', $viewdata);	
+		}
+		elseif(!$this -> users_model -> isValidNamedUser($file_uname) && 
 			!$this -> users_model -> isValidAdmin()) {
 			$data = array('title' => 'Error', 'msg' => "You must be logged in as the owner of the file, or as an Administrator to edit a file.");
 			$viewdata = array('main_content' => 'message_view', 'data' => $data);
@@ -77,19 +86,27 @@ class gpxfiles extends CI_Controller {
 		}
 	}
 
-	public function delete($id) {
+	public function delete($id=NULL) {
 		/**
 		 * Delete gpx file number $id.
 		 * Must be logged in as the owner of the file or an administrator to do this.
 		 */
 		if (isset($id)) {
 			$gpxfile = $this -> gpxfiles_model -> get_gpxfile($id);
-			$file_user_id = $gpxfile['userId'];
-			$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+			if (isset($gpxfile)) {
+				$file_user_id = $gpxfile['userId'];
+				$file_uname = $this -> users_model -> get_username_by_id($file_user_id);
+			} else
+				$file_uname = NULL;
 		} else
-			$file_uname = null;
-
-		if(!$this -> users_model -> isValidNamedUser($file_uname) && 
+			$file_uname = NULL;
+		if ($file_uname == NULL) {
+			$data = array('title' => 'Error', 
+				'msg' => "You must specify a valid GPX File ID to delete it!");
+			$viewdata = array('main_content' => 'message_view', 'data' => $data);
+			$this -> load -> view('include/site_template', $viewdata);	
+		}
+		elseif(!$this -> users_model -> isValidNamedUser($file_uname) && 
 			!$this -> users_model -> isValidAdmin()) {
 			$data = array('title' => 'Error', 
 				'msg' => "You must be logged in as the owner of the file, "
@@ -99,12 +116,17 @@ class gpxfiles extends CI_Controller {
 
 		} else {
 			$this->gpxfiles_model->delete($id);
-			$this->list_gpxfiles();
+			#$this->list_gpxfiles("deleted file number " .$id.".");
+			$data = array('title' => 'Success!', 
+				'msg' => "Deleted file number" .$id.".");
+			$viewdata = array('main_content' => 'message_view', 'data' => $data);
+			$this -> load -> view('include/site_template', $viewdata);
 		}
 	}
 
-	public function list_gpxfiles() {
+	public function list_gpxfiles($errmsg=NULL) {
 		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
+		$data['errmsg']=$errmsg;
 		$viewdata = array('main_content' => 'gpx_list_gpxfiles', 'data' => $data);
 		$this -> load -> view('include/site_template', $viewdata);
 	}
@@ -156,8 +178,13 @@ class gpxfiles extends CI_Controller {
 						}
 						$desc = $this -> input -> post('description');
 						$this -> gpxfiles_model -> add_gpxfile($userId, $desc, $gpx);
-						$viewdata = array('main_content' => 'gpx_upload_success', 'data' => $data);
+						#$viewdata = array('main_content' => 'gpx_upload_success', 'data' => $data);
+						#$this -> load -> view('include/site_template', $viewdata);
+						$data = array('title' => 'Success!', 
+						'msg' => "File Upload Successful.");
+						$viewdata = array('main_content' => 'message_view', 'data' => $data);
 						$this -> load -> view('include/site_template', $viewdata);
+						
 					} else {
 						$error['error'] = "Failed to read file contents";
 						$viewdata = array('main_content' => 'gpx_upload_form', 'data' => $error);

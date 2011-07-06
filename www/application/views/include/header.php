@@ -40,5 +40,10 @@
      </div>
      <div style="clear:both"></div>
    </div>
+   <div id='error_bar'>
+   	<?php
+   		if (isset($errmsg)) echo "<h2>" . $errmsg . "</h2>";
+		?>
+   </div>
 <div id='main_body'>
 

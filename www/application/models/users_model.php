@@ -177,12 +177,13 @@ class Users_model extends CI_Model {
 			return FALSE;
 	}
 	
-		public function isValidNamedUser($uname) {
+		public function isValidNamedUser($uname = NULL) {
 			/**
 			 * Returns TRUE if the user is logged in as the named user name, and the 
 			 * account is not deactivated.
 			 */
-		if($this -> session -> userdata('logged_in') && 
+		if(isset($uname) &&
+		$this -> session -> userdata('logged_in') && 
 		($this ->session -> userdata('role') >= 1) &&
 		($this -> session -> userdata('uname') == $uname)) {
 			#echo 'isValidNamedUser() - ' . $this->session->userdata('uname') . '  ' . $uname;

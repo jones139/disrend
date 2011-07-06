@@ -1,5 +1,5 @@
 <h1>GPX Upload Successful!</h1>
-<a href="gpxfiles/list_gpxfiles">List GPX Files</a>
+<a href="list_gpxfiles">List GPX Files</a>
 
 <ul>
 <?php foreach ($upload_data as $item => $value):?>

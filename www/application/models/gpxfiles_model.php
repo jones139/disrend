@@ -28,7 +28,11 @@ class GPXFiles_model extends CI_Model {
     {
       $this->db->where('id',$id);
       $query = $this->db->get('GPXFiles');
-      return $query->first_row('array');
+	  if ($query->num_rows() > 0)
+      	return $query->first_row('array');
+	  else
+	  	return NULL;
+	  
 	}
 
 	function get_default_gpxfile()
