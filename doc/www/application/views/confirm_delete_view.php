@@ -1,0 +1,1 @@
+<h3>Map <?php echo $job_id; ?> Deleted</h3>

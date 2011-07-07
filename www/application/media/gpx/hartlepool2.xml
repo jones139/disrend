@@ -1,0 +1,29 @@
+<xml>
+<title>Hartlepool Street Map</title>
+<format>book</format>
+<pagesize>A4</pagesize>
+<mapvfrac>75</mapvfrac>
+<columnWidth>4.0</columnWidth>
+<download>false</download>
+<streetIndex>False</streetIndex>
+<withContours>False</withContours>
+<outdir>hartlepool</outdir>
+<datadir>/home/graham/townguide</datadir>
+<debug>False</debug>
+<origin>54.6922,-1.1999</origin>
+<mapsize>3,3</mapsize>
+<detailsize>5</detailsize>
+<tilesize>1000</tilesize>
+<oscale>10</oscale>
+<dbname>mapnik</dbname>
+<uname>graham</uname>
+<mapfile>/home/graham/OSM/code/mapnik_osm/osm2.xml</mapfile>
+<features>
+Tourism:tourism='attraction',
+Entertainment:amenity='cinema'|'arts_centre',
+Leisure:leisure='golf'|'sports_centre'|'stadium'|'pitch'|'track',
+Eating Out:amenity='restaurant',
+Pubs:amenity='pub', 
+Hotels:tourism='hotel'|'motel'|'guest_house'
+</features>
+</xml>

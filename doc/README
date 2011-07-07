@@ -1,0 +1,11 @@
+disrend README
+==============
+
+disrend is a simple distributed map rendering system.  It comprises separate
+web front end and rendering system.
+
+The web front end uses php and mySQL so it can be used on commercial web hosts.
+
+The rendering system uses the mapnik library and python so will run on any linux based system.
+
+
