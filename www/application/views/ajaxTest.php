@@ -19,10 +19,14 @@ if(isset($errmsg)) {
 <button id="searchButton">Search</button>
 <br/>
 <label for="gpxFileDesc">File Description</label>
-<input type="text" name="gpxFileDesc" value="" size="50" />
+<input type="text" name="gpxFileDesc" id="gpxFileDesc" value="" size="50" readonly/>
 <br/>
 <div><input type="submit" name="submit" value="Submit" /></div>
 
+<select id="gpxSelect">
+</select>
+<br/>
+<textarea rows="10" cols="70" id="dataArea"></textarea>
 </form>
 
 
@@ -33,8 +37,6 @@ if(isset($errmsg)) {
 	Import the jQuery and jQuery-UI libraries to help with the javascript based
 	user interface
 -->
-
-
 <link type="text/css" href="<?php echo base_url();?>application/media/css/smoothness/jquery-ui-1.8.2.css" rel="Stylesheet" />	
 <script type="text/javascript" 
 	src="<?php echo base_url();?>application/media/js/jquery-1.4.2.min.js">
@@ -46,18 +48,51 @@ if(isset($errmsg)) {
 
 
 <!--
-	Javascript, using jQuery-UI to show a confirm dialog box for the 'Delete' buttons.
+	Javascript to update the GPX File Description based on specified ID number.
 -->
 <script type="text/javascript">
 	$("#dialog-confirm").hide();
 	$(".deletebutton").click(confirmDelete);
 	$("#gpxFileId").change(updateGpxFileDesc);
 
+	jQuery.ajax({
+		  url: "gpxfiles/list_gpxfiles?ajax=TRUE",
+		  success: function(data) {	$("#dataArea").val(data); setOptionList(JSON.parse(data));},
+		  error: function(data,errTxt) {alert("ajax error -"+errTxt);}
+		  });
+
+	function setOptionList(optionList) {
+		var select = $('#gpxSelect');
+		if(select.prop) {
+			var options = select.prop('options');
+		}
+		else {
+			var options = select.attr('options');
+		}
+		  
+		$('option', select).remove();
+		//alert(options);
+		$.each(optionList, function(val, text) {
+	    	//options[optionList.length] = new Option(text, val);
+			//$('#gpxSelect').prop('options')[1] = new Option(text,val);
+			$('#gpxSelect').append('<option value="'+val+'">'+text+'</option>');
+
+			//alert("val="+val+", text="+text);
+		});
+		//alert("done");
+		//history.go(0);
+}
+
 
 	function updateGpxFileDesc() {
 		file_id = $("#gpxFileId").val();
 		desc = "new Desc - fileId="+file_id;
-		alert("new Desc="+desc);
+		jQuery.ajax({
+		  url: "gpxfiles/get_gpxfile_desc/"+file_id,
+		  success: function(data) {	$("#gpxFileDesc").val(data);},
+		  error: function(data,errTxt) {alert("ajax error -"+errTxt);}
+		  });
+		//alert("new Desc="+desc);
 		$("#gpxFileDesc").val(desc);
 	}
 

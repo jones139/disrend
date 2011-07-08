@@ -40,6 +40,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpxfiles.html#a88b7e0bd1a1e050d9c2ac61503788fb5">delete</a> ($id=NULL)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpxfiles.html#aa0289ba170f0e8f8aa6e60a06e42efc7">list_gpxfiles</a> ($errmsg=NULL)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpxfiles.html#a33c4bfdaae7f73e7b894abec927306b3">get_gpxfile</a> ($id)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpxfiles.html#a5e7e820a9143f19adfe92d7436374fb5">get_gpxfile_desc</a> ($id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgpxfiles.html#a160ae63d11b56d3190b172facb43a343">upload</a> ()</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
@@ -128,7 +129,30 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00134">134</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
+<p><p>returns the contents of GPX file id number $id. If ?ajax=TRUE is included on the URL, it will return the GPX file ID, description and contents as a JSON string.</p>
+</p>
+
+<p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00151">151</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5e7e820a9143f19adfe92d7436374fb5"></a><!-- doxytag: member="gpxfiles::get_gpxfile_desc" ref="a5e7e820a9143f19adfe92d7436374fb5" args="($id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_gpxfile_desc </td>
+          <td>(</td>
+          <td class="paramtype">$&nbsp;</td>
+          <td class="paramname"> <em>id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00164">164</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
 
 </div>
 </div>
@@ -167,6 +191,16 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p><p>lists all of the GPX files in the database as an html table with edit and delete links. If ?ajax is included on the command line, it returns all of the IDs and descriptions as in json format to be used by other code.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>:</em>&nbsp;</td><td>?ajax on the command line to return json rather than html. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>errmsg,:</em>&nbsp;</td><td>If returning html, errmsg will be printed at the top of hte page.</td></tr>
+  </table>
+  </dd>
+</dl>
+</p>
+
 <p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00127">127</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
 
 </div>
@@ -186,7 +220,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00139">139</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
+<p>Definition at line <a class="el" href="gpxfiles_8php_source.html#l00171">171</a> of file <a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a>.</p>
 
 </div>
 </div>
@@ -194,7 +228,7 @@ Public Member Functions</h2></td></tr>
 <li>/home/graham/OSM/code/disrendd/www/application/controllers/<a class="el" href="gpxfiles_8php_source.html">gpxfiles.php</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 6 2011 10:50:30 for disrend by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 7 2011 21:05:35 for disrend by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

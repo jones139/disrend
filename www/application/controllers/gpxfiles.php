@@ -125,15 +125,47 @@ class gpxfiles extends CI_Controller {
 	}
 
 	public function list_gpxfiles($errmsg=NULL) {
+		/**
+		 * lists all of the GPX files in the database as an html table with edit and delete links.
+		 * If ?ajax is included on the command line, it returns all of the IDs and descriptions as
+		 * in json format to be used by other code.
+		 * 
+		 * @param : ?ajax on the command line to return json rather than html.
+		 * @param errmsg: If returning html, errmsg will be printed at the top of hte page.
+		 */
 		$data['query'] = $this -> gpxfiles_model -> get_gpxfiles();
-		$data['errmsg']=$errmsg;
-		$viewdata = array('main_content' => 'gpx_list_gpxfiles', 'data' => $data);
-		$this -> load -> view('include/site_template', $viewdata);
+		$query = $data['query'];
+		if($this -> input -> get('ajax')) {
+			foreach ($data['query']->result() as $row):
+				$res[$row->id]=$row->id." - ".$row->description;
+			endforeach;
+			echo json_encode($res);
+			
+		} else {
+			$data['errmsg']=$errmsg;
+			$viewdata = array('main_content' => 'gpx_list_gpxfiles', 'data' => $data);
+			$this -> load -> view('include/site_template', $viewdata);
+		}
 	}
 
 	public function get_gpxfile($id) {
+		/**
+		 * returns the contents of GPX file id number $id.
+		 * If ?ajax=TRUE is included on the URL, it will return the GPX file ID, description and contents
+		 * as a JSON string.
+		 */
 		$query = $this -> gpxfiles_model -> get_gpxfile($id);
-		echo $query['GPXFile'];
+		if($this -> input -> get('ajax')) {
+			echo json_encode($query);
+		} else
+			echo $query['GPXFile'];
+	}
+
+	public function get_gpxfile_desc($id) {
+		$query = $this -> gpxfiles_model -> get_gpxfile($id);
+		echo $query['description'];
+		
+		
 	}
 
 	public function upload() {
