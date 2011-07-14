@@ -1,9 +1,12 @@
 <h1>View GPX File</h1>
 <input type="hidden" name="gpxFileIdHidden" value="<?php echo $id; ?>">
+<!-- Main Map area
+-->
+<div id="mapdiv" style="width:600px; height:400px;">
+   Map should be here
+</div>
 
-<div id="mapdiv" style="width:600px; height:400px;">Map should be here</div>
-
-
+<!-- Sidebar -->
 <div id="controlSidebar">
 	<div>
 		gpxFileId <input type="text" id="gpxFileId">
@@ -44,7 +47,7 @@
    </div>
 </div>
 
-
+<!-- Dialog Box -->
 <div id="selectGPXFileDialog">
 	<h1>Select GPX File</h1>
 	<select id="gpxSelect">
@@ -59,10 +62,13 @@
 	<input type="checkbox" id="selectMeCheckbox" value="filterByMyFiles" disabled/>
 	<input type="text" id="nameFilterText" disabled>
 </div>
+<br/>
+	<textarea rows=50 cols=80 id="gpxTextArea"></textarea>
 
 
 <script src="<?php echo base_url().'application/media/js/leaflet.js'; ?>" ></script>
-<script src="<?php echo base_url().'application/media/js/jquery-1.4.2.min.js'; ?>" ></script>
+<!--<script src="<?php echo base_url().'application/media/js/jquery-1.4.2.min.js'; ?>" ></script>-->
+<script src="<?php echo base_url().'application/media/js/jquery.js'; ?>" ></script>
 <script src="<?php echo base_url().'application/media/js/jquery-ui-1.8.6.custom.min.js'; ?>" ></script>
 
 <script>
@@ -70,6 +76,7 @@
 // Fill in the gpx file number from the hidden field pased by the server.
 id = $('input[name="gpxFileIdHidden"]').val();
 $("#gpxFileId").val(id);
+loadGPXFile(id);
 
 /////////////////////////////////////////////////////////////////////////////
 // Handlers for GPX File Selector Dialog
@@ -111,6 +118,46 @@ $( "#selectGPXFileDialog" ).dialog({
 					$(this).dialog("close");
 			}
 		});
+
+function loadGPXFile(file_id) {
+/**
+ * Retrieve GPX file id number 'id' from the server.  The data is passed to
+ * 'parseGPX' function to parse it into variables.
+ */
+		var url = "<?php echo site_url();?>/gpxfiles/get_gpxfile/"+file_id+"?ajax=true";
+		jQuery.ajax({
+		  url: url,
+		  success: function(data) {	
+		  		//alert("success! " + data);
+		  		jQuery("#gpxTextArea").val(data);
+		  		gpxObj = JSON.parse(data);
+		  		parseGPX(gpxObj.GPXFile);
+		  		},
+		  error: function(data,errTxt) {alert("ajax error -"+errTxt);}
+		  });
+}
+
+function parseGPX(data) {
+/**
+ * Parse the gpx data passed as string 'data' into javascript variables.
+ * The global variable GPXdata is set.   GPXdata has the following format
+ * { id: file id,
+ *   desc: file description,
+ *   tracks: [ trackseg1, trackseg2...],
+ *   routepts: [ { desc: point description, latlng: point location}, ...]},
+ *   waypts:  [ { desc: point description, latlng: point location}, ...]},
+ * }
+ */
+   var $gpxXmlDoc = jQuery.parseXML(data);
+   var $gpx = jQuery($gpxXmlDoc);
+   //alert("$gpx="+$($gpx).text());
+   var trackSegs = jQuery($gpx).find("trkpt").each( 
+		function(index) {
+   			alert("index="+index+"  "+$(this).attr('lat')+","+$(this).attr('lon'));
+   		});
+   //var trkName = trackSegs.find("name").text();
+   //alert ("trkName="+trkName);
+}
 
 //////////////////////////////////////////////////////////////////////
 // Initialise the map and add event handlers
