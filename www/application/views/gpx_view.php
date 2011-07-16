@@ -75,9 +75,12 @@
 ///////////////////////////////////////////////////////////////////////////
 // Fill in the gpx file number from the hidden field pased by the server.
 id = $('input[name="gpxFileIdHidden"]').val();
+gpxPoints = [];
 $("#gpxFileId").val(id);
 loadGPXFile(id);
-
+alert("returned from loadGPXFile len="+gpxPoints.length);
+$.each(gpxPoints,
+       function(index,value){alert("point "+index+" value="+value);});
 /////////////////////////////////////////////////////////////////////////////
 // Handlers for GPX File Selector Dialog
 $("#selectGPXFileButton").click(
@@ -153,8 +156,22 @@ function parseGPX(data) {
    //alert("$gpx="+$($gpx).text());
    var trackSegs = jQuery($gpx).find("trkpt").each( 
 		function(index) {
-   			alert("index="+index+"  "+$(this).attr('lat')+","+$(this).attr('lon'));
+		  //alert("index="+index+"  "+$(this).attr('lat')+","+$(this).attr('lon'));
+		  gpxPoints.push(
+			  new L.LatLng($(this).attr('lat'),
+				      $(this).attr('lon'))
+				 );
    		});
+var gpxLine = new L.Polyline(gpxPoints, {color: 'red'});
+
+// zoom the map to the polyline
+map.fitBounds(new L.LatLngBounds(gpxPoints));
+
+// add the polyline to the map
+map.addLayer(gpxLine);
+gpxLine.on('click', function(e) {alert( "gpxLine - "+e.latlng);});
+//$.each(gpxPoints,
+//       function(index,value){alert("point "+index+" value="+value);});
    //var trkName = trackSegs.find("name").text();
    //alert ("trkName="+trkName);
 }
