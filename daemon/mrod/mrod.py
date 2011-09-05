@@ -1,9 +1,11 @@
 #!/usr/bin/python
 '''
- NAME: rod.py
- DESC: RenderOnDemand - takes a json description of a map to be rendered,
+ NAME: mrod.py
+ DESC: MapRenderOnDemand - takes a json description of a map to be rendered,
        Constructs the carto layer specification from it, then uses
        carto to create a mapnik style sheet.
+       It assumes that the style files, symbols and world_boundaries
+       directories are in the current working directory.
        The map is then rendered using mapnik to create an image.
 '''
 import os,sys
@@ -45,6 +47,14 @@ def getProjStr(projection):
 def renderMap(mapSpecJSON):
     '''
     Render a map to an image file, as specified in the JSON string mapSpecJSON.
+    The following are expected in the mapSpec JSON object:
+            jobID - an identifier for this particular rendering job.
+            projection - 'merc' for a spherical mercator projection
+                         'osgb' for Ordnance Survey GB Projection
+            origin - 'lon':lon, 'lat':lat - longitude and latitude of bottom left corner of map.
+            scale - the scale of the map (10000 = 1:10000).
+            resolution - the required image output resolution in dpi.
+            paper - specification for the size of the image 
     '''
     # mso = mapSpecObject
     mso = json.loads(mapSpecJSON)

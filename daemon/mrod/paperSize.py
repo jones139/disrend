@@ -1,7 +1,7 @@
 
 
 ####################################################################
-def getPaperSize(paperObj):
+def getPaperSize(paperObj,verbose=False):
     ''' 
     Returns the papersize (w,h) which is the width and height of the paper
     in cm, based on the definition in object paperObj.
@@ -24,12 +24,12 @@ def getPaperSize(paperObj):
     if paperObj['size'] in sizes:
         (w,h) = sizes[paperObj['size']]
         if 'orientation' in paperObj:
-            if (options.verbose): 
+            if (verbose): 
                 print 'orientation = %s.' % paperObj['orientation']
             if paperObj['orientation'] == 'landscape':
                 (w,h)=(h,w)
     else:
-        if (options.verbose): print "size %s not found"
+        if (verbose): print "size %s not found"
         (w,h) = (300,300)
         if 'w' in paperObj: w=paperObj['w']
         if 'h' in paperObj: h=paperObj['h']

@@ -2,14 +2,15 @@
 class Mapspecs_model extends CI_Model {
 
     var $id   = '';
-    var $map_title = '';
-    var $map_description='';
-    var $map_renderer     = '';
-    var $style_id = '';
-    var $bbox_lon_min = '';
-    var $bbox_lat_min = '';
-    var $size_x = '';  
-    var $size_y = '';
+    var $userId = '';
+    var $title = '';
+    var $description='';
+    var $mapRendererId     = '';
+    var $styleId = '';
+    var $bboxLonMin = '';
+    var $bboxLatMin = '';
+    var $bboxLonMax = '';  
+    var $bboxLatMax = '';
 
     function __construct()
     {
@@ -26,7 +27,7 @@ class Mapspecs_model extends CI_Model {
       return $query;
     }
 
-    function get_mapspec_by_id($id)
+    function get_mapspec($id)
       /** 
        * get the details of map number id - returned as an array;
        */
@@ -36,38 +37,58 @@ class Mapspecs_model extends CI_Model {
       return $query->first_row('array');
     }
 
+
+    function create_mapspec() {
+      /**
+       * Creates a new mapspec with default data
+       */
+        $this->mapRendererId = ""; 
+	$this->title = "New Mapspec";
+	$this->userId = $this -> session -> userdata('user_id');
+	$this->description = "New Mapspec";
+        $this->styleId = 1;
+        $this->bboxLonMin = 0;
+        $this->bboxLatMin = 0;
+        $this->bboxLonMax = 0;
+        $this->bboxLatMax = 0;
+
+        $this->db->insert('MapSpecs', $this);
+	$id = $this->db->insert_id();
+	return($id);
+    }
+
     function add_map(
-		     $map_renderer,
-		     $style_id,
-		     $bbox_lon_min,
-		     $bbox_lat_min,
-		     $size_x,
-		     $size_y)
+		     $mapRendererId,
+		     $styleId,
+		     $bboxLonMin,
+		     $bboxLatMin,
+		     $bboxLonMax,
+		     $bboxLatMax)
     {
-        $this->map_renderer = $map_renderer; 
-        $this->style_id = $style_id;
-        $this->bbox_lon_min = $bbox_lon_min;
-        $this->bbox_lat_min = $bbox_lat_min;
-        $this->size_x = $size_y;
-        $this->size_y = $size_y;
+        $this->mapRendererId = $mapRendererId; 
+        $this->styleId = $styleId;
+        $this->bboxLonMin = $bboxLonMin;
+        $this->bboxLatMin = $bboxLatMin;
+        $this->bboxLonMax = $bboxLatMax;
+        $this->bboxLatMax = $bboxLatMax;
 
         $this->db->insert('MapSpecs', $this);
     }
 
     function update_map($id,
-		     $map_renderer,
-		     $style_id,
-		     $bbox_lon_min,
-		     $bbox_lat_min,
-		     $size_x,
-		     $size_y)
+		     $mapRendererId,
+		     $styleId,
+		     $bboxLonMin,
+		     $bboxLatMin,
+		     $bboxLonMax,
+		     $bboxLatMax)
     {
-	if ($map_renderer!='') $data['map_renderer']=$map_renderer;
-	if ($style_id!='') $data['style_id']=style_id;
-	if ($bbox_lon_min!='') $data['bbox_lon_min']=$bbox_lon_min;
-	if ($bbox_lat_min!='') $data['bbox_lat_min']=$bbox_lat_min;
-	if ($size_x!='') $data['size_x']=$size_x;
-	if ($size_y!='') $data['size_y']=$size_y;
+	if ($mapRendererId!='') $data['mapRendererId']=$mapRendererId;
+	if ($styleId!='') $data['styleId']=styleId;
+	if ($bboxLonMin!='') $data['bboxLonMin']=$bboxLonMin;
+	if ($bboxLatMin!='') $data['bboxLatMin']=$bboxLatMin;
+	if ($bboxLonMax!='') $data['bboxLonMax']=$bboxLonMax;
+	if ($bboxLatMax!='') $data['bboxLatMax']=$bboxLatMax;
 
 	$this->db->where('id',$user_id);
 	$this->db->update('MapSpecs',$data);
@@ -78,6 +99,7 @@ class Mapspecs_model extends CI_Model {
     {
    		$sql = "create table if not exists `MapSpecs` ( 
 		`id` int(11) not null auto_increment primary key,
+                `userId` int(11),
 		`title` varchar(128),
 		`description` varchar(512),
 		`mapRendererId` int(11),

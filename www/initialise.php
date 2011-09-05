@@ -62,8 +62,9 @@
 		echo "<h2>Initialise MapSpecs table</h2>";
 		$sql = "drop table if exists MapSpecs;";
 		mysql_query($sql) or die(mysql_error());
-		$sql = "create table if not exists `MapSpecs` ( 
+   		$sql = "create table if not exists `MapSpecs` ( 
 		`id` int(11) not null auto_increment primary key,
+                `userId` int(11),
 		`title` varchar(128),
 		`description` varchar(512),
 		`mapRendererId` int(11),
