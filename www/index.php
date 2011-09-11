@@ -1,5 +1,6 @@
 <?php
 
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -19,6 +20,7 @@
  *
  */
 	define('ENVIRONMENT', 'development');
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -32,15 +34,33 @@
 	{
 		case 'development':
 			error_reporting(E_ALL);
-		break;
+			if (!ini_get('display_errors'))
+			{
+				ini_set('display_errors', 1);
+			}
+			break;
 	
 		case 'testing':
 		case 'production':
 			error_reporting(0);
-		break;
+			break;
 
 		default:
 			exit('The application environment is not set correctly.');
+	}
+
+/*
+|---------------------------------------------------------------
+| DEFAULT INI SETTINGS
+|---------------------------------------------------------------
+|
+| Necessary settings for a higher compatibility. Inspired by PyroCMS code.
+|
+*/
+	// PHP 5.3 requires this
+	if(ini_get('date.timezone') == '')
+	{
+		date_default_timezone_set('GMT');
 	}
 
 /*
@@ -53,7 +73,7 @@
  * as this file.
  *
  */
-	$system_path = 'system';
+	$system_path = "bonfire/codeigniter";
 
 /*
  *---------------------------------------------------------------
@@ -69,7 +89,7 @@
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'application';
+	$application_folder = "bonfire/application";
 
 /*
  * --------------------------------------------------------------------
@@ -125,18 +145,14 @@
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
 // --------------------------------------------------------------------
 
+
+
+
 /*
  * ---------------------------------------------------------------
  *  Resolve the system path for increased reliability
  * ---------------------------------------------------------------
  */
-
-	// Set the current directory correctly for CLI requests
-	if (defined('STDIN'))
-	{
-		chdir(dirname(__FILE__));
-	}
-
 	if (realpath($system_path) !== FALSE)
 	{
 		$system_path = realpath($system_path).'/';
