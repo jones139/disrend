@@ -57,7 +57,7 @@ $config['site.backup_folder']	= 'archives/';
 $config['auth.allow_register'] = 1;
  
 // Type of login allowed ('email', 'username', 'both')
-$config['auth.login_type'] = "email";
+$config['auth.login_type'] = "both";
  
 // Whether usernames are used in the system (0:no, 1:yes, 2:yes+ownname)
 $config['auth.use_usernames'] = 1;
