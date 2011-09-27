@@ -14,11 +14,11 @@ import json
 import mapnik2 as mapnik
 from createGridShapefile import createGridShapefile
 from paperSize import getPaperSize
+import srtm
 
 options=[]
-mapfile = "weardale_vmd.mml"
 xmlmapfile = "osm_carto.xml"
-map_uri = "image_vmd.png"
+map_uri = "image.png"
 
 
 
@@ -40,6 +40,96 @@ def getProjStr(projection):
         print "projection %s is not valid - defaulting to 'merc'." % projection
         return projStrs['merc']
 
+def downloadOSMData(ll):
+    """ Downloads OSM data for the specified bounding box and
+    uploads it into the postgresql database.
+    """
+    # XAPI Server
+    print 'Using OSM XAPI Server for data download'
+    url="http://jxapi.openstreetmap.org/xapi/api/0.6/map?bbox=%f,%f,%f,%f" %\
+                 (ll[0],ll[1],ll[2],ll[3])
+    osmFile = "townguide.osm"
+    print "url="+url
+    os.system("wget %s -O %s" % (url,osmFile))
+
+    if os.path.exists(osmFile):
+        try:
+            print 'Importing data into postgresql database....'
+            osm2pgsqlStr = "osm2pgsql -m -S %s/%s -d %s -a %s" %\
+                (".",
+                 "default.style",
+                 "mapnik",
+                 osmFile)
+            print "Calling osm2pgsql with: %s" % osm2pgsqlStr
+            retval = os.system(osm2pgsqlStr)
+            if (retval==0):
+                print 'Data import complete.'
+            else:
+                print 'osm2pgsql returned %d - exiting' % retval
+            # system.exit(-1)
+        except:
+            print "Exception Occurred running osm2pgsql"
+            system.exit(-1)
+    else:
+        print "ERROR:  Failed to download OSM data"
+        print "Aborting...."
+        system.exit(-1)
+
+
+
+def downloadSRTMData(ll):
+    """ Downloads SRTM data, converts it to contours, and uploads
+    it into a postgresql database.
+    26sep2011 GJ  ORIGINAL VERSION
+    """
+    srtmTmpDir = "srtm_tmp"
+    mergeHgt = "srtm.hgt"
+    mergeShp = "srtm.shp"
+
+    # First clean out the temporary directory
+    oldFileList = os.listdir(srtmTmpDir)
+    for fname in oldFileList:
+        print "removing %s/%s" % (srtmTmpDir,fname)
+        os.remove("%s/%s" % (srtmTmpDir,fname))
+    print "removing directory ",srtmTmpDir
+    os.rmdir(srtmTmpDir)
+
+
+    print "downloadSRTMData()"
+    downloader = srtm.SRTMDownloader()
+    downloader.loadFileList()
+    print "ll=",ll
+    tileSet = downloader.getTileSet(ll)
+    print tileSet
+
+    os.makedirs(srtmTmpDir)
+    origWd = os.getcwd()
+    os.chdir(srtmTmpDir)
+    for tileFname in tileSet:
+        fnameParts = tileFname.split("/")
+        fname = fnameParts[-1]
+        os.symlink("../%s" % (tileFname),
+                   "%s" % (fname))
+        os.system("unzip %s" % (fname))
+        os.remove(fname)
+
+    # Now merge the individual srtm tiles into a single big one.
+    mergeCmd = "gdal_merge.py -o %s " % mergeHgt
+    fileList = os.listdir(".")
+    for fname in fileList:
+        mergeCmd = "%s %s" % (mergeCmd,fname)
+    print mergeCmd
+    os.system(mergeCmd)
+
+    print "Generating Contour Lines...."
+    os.system("gdal_contour -i 10 -snodata 32767 -a height %s %s" %
+              (mergeHgt,mergeShp))
+
+    #os.system("shp2pgsql -p -I -g way %s contours | psql -q mapnik" % mergeShp)
+    #os.system("shp2pgsql -a -g way %s contours | psql -q mapnik" % mergeShp)
+
+
+    os.chdir(origWd)
 
 
 ###########################################################################
@@ -80,6 +170,19 @@ def renderMap(mapSpecJSON):
 
     projStr = getProjStr(mso['projection']);
     print "projStr = %s" % projStr
+
+    # the .mml is optional, so we split it of before adding it again
+    # to get the full file name.
+    baseMap = mso['baseMap'].split('.mml')[0] + ".mml"
+    print "basemap=%s" % (baseMap)
+
+
+    baseMapFile = open(baseMap)
+    baseMapJSON = baseMapFile.read()
+    bso = json.loads(baseMapJSON)
+    for mapobj in bso:
+        print mapobj
+
 
     ######################################################
     # Calculate map Bounding Box (in degrees and metres) #
@@ -122,7 +225,8 @@ def renderMap(mapSpecJSON):
     print "createGridShapefile = %d" % createGridShapefileFlag
 
     if createGridShapefileFlag: createGridShapefile(ll)
-
+    if downloadSrtmDataFlag: downloadSRTMData(ll)
+    if downloadOsmDataFlag: downloadOSMData(ll)
 
     ######################
     # Now Render the Map #
@@ -131,7 +235,9 @@ def renderMap(mapSpecJSON):
 
     print "Making Mapnik2 compatible style from standard OSM stylesheets"
     os.system("rm %s" % xmlmapfile)
-    os.system("carto %s > %s" % (mapfile,xmlmapfile))
+    cartoCmd ="carto %s > %s" % (baseMap,xmlmapfile)
+    print "cartoCmd = %s\n" % cartoCmd
+    os.system(cartoCmd)
     print "created %s" % xmlmapfile
 
     mapnik_scale_factor = img_dpi / 92.
@@ -149,6 +255,7 @@ def renderMap(mapSpecJSON):
     view.save(map_uri,'png')
 
     print "done - image stored as %s" % map_uri
+
 
 
 

@@ -184,10 +184,57 @@ class SRTMDownloader:
         """Get a SRTM tile object. This function can return either an SRTM1 or
             SRTM3 object depending on what is available, however currently it
             only returns SRTM3 objects."""
-        (filename,tile_lon,tile_lat) = self.getTileFname(lat,lon)
+        (filename,tile_lon,tile_lat) = self.getTileFname(lon,lat)
         return SRTMTile(filename, tile_lat, tile_lon)
 
-    def getTileFname(self,lat,lon):
+    def getTileSet(self,bbox):
+        """Returns a list of SRTM tile file names that completely covers
+        the specified bounding box (lon1,lat1,lon2,lat2).
+        26sep2011  GJ  ORIGINAL VERSION
+        """
+        tileSize = 1.0  #size of each SRTM tile in deg.
+        tileList = []
+
+        lon = bbox[0]
+        lat = bbox[1]
+        print "getting SRTM tile filename for lon=%f,lat=%f\n" % (bbox[0],bbox[1])
+        (filename,tile_lon,tile_lat) = self.getTileFname(lon,lat)
+
+        needMore =True
+        nTilesX = 1
+        while (needMore):
+            if (bbox[2]<tile_lon+tileSize):
+                needMore = False   # ie the current tile covers the 
+                                   # right side of the bounding box.
+            else:
+                nTilesX += 1
+                tile_lon += tileSize
+            
+
+        needMore = True
+        nTilesY = 1
+        while (needMore):
+            if (bbox[3]<tile_lat+tileSize):
+                needMore = False   # ie the current tile covers the 
+                                   # top side of the bounding box.
+            else:
+                nTilesY += 1
+                tile_lat += tileSize
+
+
+        print "calculating grid of SRTM tiles..."
+        for x in range(0,nTilesX):
+            for y in range(0,nTilesY):
+                lon = bbox[0]+x*tileSize
+                lat = bbox[1]+y*tileSize
+                (filename,tile_lon,tile_lat) = self.getTileFname(lon,lat)
+                print "filename=%s\n" % (filename)
+                tileList.append(filename)
+                
+        return tileList
+                
+
+    def getTileFname(self,lon,lat):
         """Returns a tuple containing the filename of the srtm tile containing 
         coordinates (lon,lat), and the coordinates of the bottom left corner of the
         tile.   If the tile file does not exist in the cache, it is downloaded
@@ -413,8 +460,12 @@ class parseHTMLDirectoryListing(HTMLParser):
 if __name__ == '__main__':
     downloader = SRTMDownloader()
     downloader.loadFileList()
-    tile = downloader.getTile(54.8025, -2.28)
-    print tile.getAltitudeFromLatLon(54.8025, -2.28)
+    lon = -2.28
+    lat = 54.8025
+    lon = -3.62
+    lat = 54.15
+    tile = downloader.getTile(lat,lon)
+    print tile.getAltitudeFromLatLon(lat,lon)
 
-    fname = downloader.getTileFname(54.8025,-2.28)
+    fname = downloader.getTileFname(lon,lat)
     print fname

@@ -5,7 +5,7 @@
 "scale":100000,
 "paper":{"size":"A4","orientation":"landscape"},
 "resolution":300,
-"baseMap":"osm",
+"baseMap":"dunes_race.mml",
 "baseStyle":"file:osm.tgz",
 "baseSymbolSet":"file:symbols.tgz",
 "extraSymbols":"file:extrasymbols.tgz",
