@@ -14,6 +14,7 @@ import json
 import mapnik2 as mapnik
 from createGridShapefile import createGridShapefile
 from paperSize import getPaperSize
+from createMml import createMml
 import srtm
 
 options=[]
@@ -55,7 +56,7 @@ def downloadOSMData(ll):
     if os.path.exists(osmFile):
         try:
             print 'Importing data into postgresql database....'
-            osm2pgsqlStr = "osm2pgsql -m -S %s/%s -d %s -a %s" %\
+            osm2pgsqlStr = "osm2pgsql -m -s -S %s/%s -d %s -a %s" %\
                 (".",
                  "default.style",
                  "mapnik",
@@ -84,7 +85,9 @@ def downloadSRTMData(ll):
     """
     srtmTmpDir = "srtm_tmp"
     mergeHgt = "srtm.hgt"
-    mergeShp = "srtm.shp"
+    mergeTif = "srtm.tiff"
+    contoursShp = "contours.shp"
+    hillshadeTif = "hillshade.tiff"
 
     # First clean out the temporary directory
     oldFileList = os.listdir(srtmTmpDir)
@@ -123,18 +126,20 @@ def downloadSRTMData(ll):
 
     print "Generating Contour Lines...."
     os.system("gdal_contour -i 10 -snodata 32767 -a height %s %s" %
-              (mergeHgt,mergeShp))
+              (mergeHgt,contoursShp))
 
-    #os.system("shp2pgsql -p -I -g way %s contours | psql -q mapnik" % mergeShp)
-    #os.system("shp2pgsql -a -g way %s contours | psql -q mapnik" % mergeShp)
-
+    print "Generating Hillshading overlay image...."
+    print "      re-projecting SRTM data to map projection..."
+    os.system("gdalwarp -of GTiff -co \"TILED=YES\" -srcnodata 32767 -t_srs \"+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m\" -rcs -order 3 -tr 30 30 -multi %s %s" % (mergeHgt,mergeTif))
+    print "      generating hillshade image...."
+    os.system("hillshade  %s %s -z 2" % (mergeTif,hillshadeTif))
 
     os.chdir(origWd)
 
 
 ###########################################################################
 
-def renderMap(mapSpecJSON):
+def renderMap(mapSpecJSON,settingsJSON):
     '''
     Render a map to an image file, as specified in the JSON string mapSpecJSON.
     The following are expected in the mapSpec JSON object:
@@ -148,7 +153,10 @@ def renderMap(mapSpecJSON):
     '''
     # mso = mapSpecObject
     mso = json.loads(mapSpecJSON)
+    #seto = settings Object
+    seto = json.loads(settingsJSON)
     if (options.verbose): 
+        print "Imported settings as:\n%s\n" % (seto.__str__())
         print "Imported Mapspec as:\n%s\n" % (mso.__str__())
     jobID = mso['jobID']
     projection = mso['projection']
@@ -171,18 +179,29 @@ def renderMap(mapSpecJSON):
     projStr = getProjStr(mso['projection']);
     print "projStr = %s" % projStr
 
-    # the .mml is optional, so we split it of before adding it again
-    # to get the full file name.
-    baseMap = mso['baseMap'].split('.mml')[0] + ".mml"
-    print "basemap=%s" % (baseMap)
+    # Get or create the layer definitions.
+    # If the mapspec contains a 'baseMap' attribute, we assume
+    #  that this points to a valid .mml definition file.
+    # Otherwise we use the 'Layers' array from the mapspec to build
+    # a .mml file ourselves.
+    try:
+        # the .mml is optional, so we split it of before adding it again
+        # to get the full file name.
+        baseMap = mso['baseMap'].split('.mml')[0] + ".mml"
+        print "basemap=%s - using that for map layer definitions" % (baseMap)
+    except:
+        print "baseMap not defined, trying to build a layer definition file from the 'Layers' array...."
+        baseMap = "mrodAuto.mml"
+        LayersArr = mso['Layers']
+        print LayersArr
+        createMml(baseMap,LayersArr,seto)
 
 
-    baseMapFile = open(baseMap)
-    baseMapJSON = baseMapFile.read()
-    bso = json.loads(baseMapJSON)
-    for mapobj in bso:
-        print mapobj
-
+        #        baseMapFile = open(baseMap)
+        #        baseMapJSON = baseMapFile.read()
+        #        bso = json.loads(baseMapJSON)
+        #        for mapobj in bso:
+        #            print mapobj
 
     ######################################################
     # Calculate map Bounding Box (in degrees and metres) #
@@ -240,7 +259,7 @@ def renderMap(mapSpecJSON):
     os.system(cartoCmd)
     print "created %s" % xmlmapfile
 
-    mapnik_scale_factor = img_dpi / 92.
+    mapnik_scale_factor = img_dpi / 90.7
     imgx = int(imgw * img_dpi / 2.54)
     imgy = int(imgh * img_dpi / 2.54)
 
@@ -270,9 +289,12 @@ if __name__ == "__main__":
                      help="Include verbose output")
     parser.add_option("-d", "--debug", action="store_true",dest="debug",
                      help="Include debug output")
+    parser.add_option("-s", "--settings",dest="settings",
+                     help="Filename of settings JSON file (default is ./settings.json)")
     parser.set_defaults(
         debug=False,
-        verbose=False)
+        verbose=False,
+        settings="./settings.json")
     (options,args)=parser.parse_args()
    
     if (options.debug):
@@ -295,8 +317,12 @@ if __name__ == "__main__":
 
     mapSpecJSON = infile.read()
 
+    settingsFile = open(options.settings)
+    settingsJSON = settingsFile.read()
+
+
     if (options.verbose): print "Mapspec is:\n%s\n" % mapSpecJSON
-    renderMap(mapSpecJSON)
+    renderMap(mapSpecJSON,settingsJSON)
 
 
 

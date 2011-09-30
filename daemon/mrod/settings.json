@@ -1,0 +1,12 @@
+{
+"world_boundaries":"/home/OSM/data/mapdata/world_boundaries",
+"osm_db":  {
+	   "type":"postgis",
+	   "dbname":"mapnik",
+	   "user":"www",
+	   "password":"1234",
+	   "host":"localhost",
+	   "port":""
+ 	},
+"vmd_path":"/home/OSM/data/vmd"
+}

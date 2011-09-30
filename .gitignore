@@ -5,4 +5,8 @@
 .svn
 doc/html/*
 daemon/mrod/srtm_cache/*
+grid.shp
+grid.shx
+grid.dbf
+osm_carto.xml
 
