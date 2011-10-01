@@ -16,6 +16,8 @@ from createGridShapefile import createGridShapefile
 from paperSize import getPaperSize
 from createMml import createMml
 import srtm
+import ll2os
+
 
 options=[]
 xmlmapfile = "osm_carto.xml"
@@ -179,30 +181,6 @@ def renderMap(mapSpecJSON,settingsJSON):
     projStr = getProjStr(mso['projection']);
     print "projStr = %s" % projStr
 
-    # Get or create the layer definitions.
-    # If the mapspec contains a 'baseMap' attribute, we assume
-    #  that this points to a valid .mml definition file.
-    # Otherwise we use the 'Layers' array from the mapspec to build
-    # a .mml file ourselves.
-    try:
-        # the .mml is optional, so we split it of before adding it again
-        # to get the full file name.
-        baseMap = mso['baseMap'].split('.mml')[0] + ".mml"
-        print "basemap=%s - using that for map layer definitions" % (baseMap)
-    except:
-        print "baseMap not defined, trying to build a layer definition file from the 'Layers' array...."
-        baseMap = "mrodAuto.mml"
-        LayersArr = mso['Layers']
-        print LayersArr
-        createMml(baseMap,LayersArr,seto)
-
-
-        #        baseMapFile = open(baseMap)
-        #        baseMapJSON = baseMapFile.read()
-        #        bso = json.loads(baseMapJSON)
-        #        for mapobj in bso:
-        #            print mapobj
-
     ######################################################
     # Calculate map Bounding Box (in degrees and metres) #
     ######################################################
@@ -221,6 +199,35 @@ def renderMap(mapSpecJSON,settingsJSON):
     c0 = prj.forward(mapnik.Coord(ll[0],ll[1]))
     c1 = prj.forward(mapnik.Coord(ll[2],ll[3]))
     print c0,c1
+
+
+
+    # Get or create the layer definitions.
+    # If the mapspec contains a 'baseMap' attribute, we assume
+    #  that this points to a valid .mml definition file.
+    # Otherwise we use the 'Layers' array from the mapspec to build
+    # a .mml file ourselves.
+    try:
+        # the .mml is optional, so we split it of before adding it again
+        # to get the full file name.
+        baseMap = mso['baseMap'].split('.mml')[0] + ".mml"
+        print "basemap=%s - using that for map layer definitions" % (baseMap)
+    except:
+        print "baseMap not defined, trying to build a layer definition file from the 'Layers' array...."
+        baseMap = "mrodAuto.mml"
+        layersArr = mso['Layers']
+        print layersArr
+        osGridSquareList = ll2os.bbox2gridList(ll)
+        print osGridSquareList
+
+        createMml(baseMap,layersArr,osGridSquareList,seto)
+
+
+        #        baseMapFile = open(baseMap)
+        #        baseMapJSON = baseMapFile.read()
+        #        bso = json.loads(baseMapJSON)
+        #        for mapobj in bso:
+        #            print mapobj
 
 
     ###################
