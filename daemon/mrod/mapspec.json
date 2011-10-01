@@ -1,11 +1,11 @@
 {
 "jobID":1,
 "projection":"merc",
-"origin":{"lat":54.73,"lon":-2.29},
-"scale":100000,
-"paper":{"size":"A4","orientation":"landscape"},
+"origin":{"lat":54.33,"lon":-3.44},
+"scale":250000,
+"paper":{"size":"A3","orientation":"portrait"},
 "resolution":300,
-"baseMap":"dunes_race.mml",
+"#baseMap":"Mountains.mml",
 "baseStyle":"file:osm.tgz",
 "baseSymbolSet":"file:symbols.tgz",
 "extraSymbols":"file:extrasymbols.tgz",
@@ -14,6 +14,17 @@
 	"contours",
 	"file:route.tgz",
 	"file:gpx.tgz"
+	],
+"Layers":[
+	"coastline",
+	"osm_landuse",
+	"osm_amenity",
+	"osm_roads",
+	"osm_paths",
+	"grid",
+	"contours",
+	"hillshading",
+	"osm_natural"
 	],
 "processing":{
 	"downloadOsmData":false,

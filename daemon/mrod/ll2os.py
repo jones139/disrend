@@ -63,6 +63,15 @@ def ll2osgb(lat,lon,ndig=6):
 
     return(gridRef)
 
+
+def bbox2gridList(ll):
+    print "bbox2gridList:",ll
+    gridlist=[]
+
+    
+
+
+
 ###################################################################
 # Main program
 

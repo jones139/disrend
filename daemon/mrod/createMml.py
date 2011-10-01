@@ -37,6 +37,7 @@ def mkStyleList(stylePath="."):
 
 def createMml(baseMap,layerNamesArr, defaults):
     osmProj = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs"
+    latLonProj = "+proj=latlong +datum=WGS84"
 
     print "createMml - basemap=%s" % baseMap
     print "defaults=",defaults['osm_db']
@@ -72,7 +73,7 @@ def createMml(baseMap,layerNamesArr, defaults):
                              "osm_natural",
                              "polygon",
                              mkOSMDataSource(defaults['osm_db'],
-                                             '(select way,\"natural\",name from planet_osm_polygon where  \"natural\" is not null) as natural')
+                                             '(select way,"natural",name from planet_osm_polygon where  "natural" is not null) as "natural"')
                              )
             layersArr.append(lo)
             lo = mkLayerDict("osm_natural_line",
@@ -81,7 +82,7 @@ def createMml(baseMap,layerNamesArr, defaults):
                              "osm_natural",
                              "line",
                              mkOSMDataSource(defaults['osm_db'],
-                                             '(select way,\"natural\",name from planet_osm_line where  \"natural\" is not null) as natural')
+                                             '(select way,"natural",name from planet_osm_line where  "natural" is not null) as "natural"')
                              )
             layersArr.append(lo)
             lo = mkLayerDict("osm_natural_point",
@@ -90,10 +91,10 @@ def createMml(baseMap,layerNamesArr, defaults):
                              "osm_natural",
                              "point",
                              mkOSMDataSource(defaults['osm_db'],
-                                             '(select way,\"natural\",name from planet_osm_point where  \"natural\" is not null) as natural')
+                                             '(select way,"natural",name from planet_osm_point where  "natural" is not null) as "natural"')
                              )
             layersArr.append(lo)
-
+            ###########################################################
         elif layer == "osm_amenity":
             print "%s found" % layer
             lo = mkLayerDict("osm_amenity_poly",
@@ -132,6 +133,7 @@ def createMml(baseMap,layerNamesArr, defaults):
                                              '(select way,amenity,name from planet_osm_point where amenity is not null) as amenity')
                              )
             layersArr.append(lo)
+            #############################################################
         elif layer == "osm_roads":
             print "%s found" % layer
             lo = mkLayerDict("osm_highways",
@@ -143,25 +145,69 @@ def createMml(baseMap,layerNamesArr, defaults):
                                              '(select way,planet_osm_line.highway,name,ref,priority from planet_osm_line join highway_priorities on (planet_osm_line.highway=highway_priorities.highway) where planet_osm_line.highway is not null order by priority desc) as highways'
                              ))
             layersArr.append(lo)
-
+            ###############################################################
         elif layer == "osm_paths":
             print "%s found" % layer
+            lo = mkLayerDict("osm_paths",
+                             "osm_paths",
+                             osmProj,
+                             "osm_paths",
+                             "line",
+                             mkOSMDataSource(defaults['osm_db'],
+                                             "(select way,planet_osm_line.highway,name,ref,priority from planet_osm_line join highway_priorities on (planet_osm_line.highway=highway_priorities.highway) where planet_osm_line.highway in ('path','footway','cycleway','track','bridleway','public_bridleway','public_footpath') order by priority desc) as highways"))
+            layersArr.append(lo)
+            ###############################################################
         elif layer == "contours":
             print "%s found" % layer
+            lo = mkLayerDict("contours",
+                          "contours",
+                          latLonProj,
+                          "contours",
+                          "polygon",
+                          {"file":"%s/%s" % 
+                           (defaults['srtm_path'],
+                            defaults['contoursShp']),
+                           "type":"shape"})
+            layersArr.append(lo)
+            ###############################################################
         elif layer == "hillshading":
             print "%s found" % layer
+            lo = mkLayerDict("hillshade",
+                          "hillshade",
+                          osmProj,
+                          "hillshade",
+                          "raster",
+                          {"file":"%s/%s" 
+                           % (defaults['srtm_path'], 
+                              defaults['hillshadeTif']),
+                           "type":"gdal"})
+            layersArr.append(lo)
+            ###############################################################
         elif layer == "grid":
             print "%s found" % layer
+            lo = mkLayerDict("grid",
+                          "grid",
+                          osmProj,
+                          "grid",
+                          "line",
+                          {"file":"./grid.shp" ,
+                           "type":"shape"})
+            layersArr.append(lo)
+            ###############################################################
         else:
             print "Error - Layer %s unrecognised!!!!" % layer
 
 
 
     #######################################################################
+    # Generate the list of style files to use by searching the working 
+    # directory for .mss files.
+    #
     styleList = mkStyleList()
 
     #######################################################################
     # Now write the mml file to disk
+    #
     mmlDict = {"srs":"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs",
                "Stylesheet":styleList,
                "Layer":layersArr}
@@ -170,3 +216,5 @@ def createMml(baseMap,layerNamesArr, defaults):
     baseMapFile = open(baseMap,"w")
     baseMapFile.write(json.dumps(mmlDict,indent=4,sort_keys=True))
     baseMapFile.close
+
+

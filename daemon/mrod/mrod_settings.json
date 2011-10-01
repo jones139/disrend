@@ -1,0 +1,7 @@
+{
+  "dbname":"mapnik",
+  "user":"www",
+  "password":"1234",
+  "host":"localhost",
+  "port":"",
+}
