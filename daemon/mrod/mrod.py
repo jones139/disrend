@@ -92,12 +92,13 @@ def downloadSRTMData(ll):
     hillshadeTif = "hillshade.tiff"
 
     # First clean out the temporary directory
-    oldFileList = os.listdir(srtmTmpDir)
-    for fname in oldFileList:
-        print "removing %s/%s" % (srtmTmpDir,fname)
-        os.remove("%s/%s" % (srtmTmpDir,fname))
-    print "removing directory ",srtmTmpDir
-    os.rmdir(srtmTmpDir)
+    if os.path.isdir(srtmTmpDir):
+        oldFileList = os.listdir(srtmTmpDir)
+        for fname in oldFileList:
+            print "removing %s/%s" % (srtmTmpDir,fname)
+            os.remove("%s/%s" % (srtmTmpDir,fname))
+        print "removing directory ",srtmTmpDir
+        os.rmdir(srtmTmpDir)
 
 
     print "downloadSRTMData()"
