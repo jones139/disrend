@@ -109,11 +109,13 @@ def bbox2gridList(ll):
 ###################################################################
 # Main program
 
-bbox = (-1.9, 54.5, -1.0, 60.0)
+##########################################################################
+if __name__ == "__main__":
+    bbox = (-1.9, 54.5, -1.0, 60.0)
 
-print ll2osgb(bbox[0],bbox[1])
+    print ll2osgb(bbox[0],bbox[1])
 
-print ll2gridSquare(bbox[0],bbox[1])
+    print ll2gridSquare(bbox[0],bbox[1])
 
-print bbox2gridList(bbox)
+    print bbox2gridList(bbox)
 
