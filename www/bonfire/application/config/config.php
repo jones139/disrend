@@ -20,7 +20,7 @@ $config['modules_locations'] = array(
 | path to your installation.
 |
 */
-$config['base_url']	= '';
+$config['base_url']	= 'http://localhost/disrendd/';
  
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ $config['base_url']	= '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = 'index.php';
  
 /*
 |--------------------------------------------------------------------------
@@ -230,7 +230,7 @@ $config['cache_path'] = APPPATH .'cache/';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = "e58cfcfe44d436c7fe5faeb6cae2e36e";
+$config['encryption_key'] = "ac6aa4caa24fd58ff11889973c100f7d";
  
 /*
 |--------------------------------------------------------------------------
