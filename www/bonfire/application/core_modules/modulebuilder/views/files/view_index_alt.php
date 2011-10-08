@@ -62,6 +62,21 @@ for($counter=1; $field_total >= $counter; $counter++)
 	$headers .= '
 		<th>'. set_value("view_field_label$counter").'</th>';
 }
+if ($use_soft_deletes == 'true')
+{
+	$headers .= '
+		<th>Deleted</th>';
+}
+if ($use_created == 'true')
+{
+	$headers .= '
+		<th>Created</th>';
+}
+if ($use_modified == 'true')
+{
+	$headers .= '
+		<th>Modified</th>';
+}
 
 $view = str_replace('{table_header}', $headers, $view);
 

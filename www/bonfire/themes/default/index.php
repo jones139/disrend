@@ -10,6 +10,8 @@
 	<meta charset="UTF-8" />
 	
 	<title><?php echo config_item('site.title'); ?></title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
 	<?php echo Assets::css(); ?>
 	
@@ -43,6 +45,7 @@
 	
 	<script>
 		head.js(<?php echo Assets::external_js(null, true) ?>);
+		head.js(<?php echo Assets::module_js(true) ?>);
 	</script>
 	<?php echo Assets::inline_js(); ?>
 </body>

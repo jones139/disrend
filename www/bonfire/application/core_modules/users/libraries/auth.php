@@ -152,6 +152,13 @@ class Auth  {
 		
 		$user = $this->ci->user_model->select($selects)->find_by(config_item('auth.login_type'), $login);
 		
+		// check to see if a value of false came back, meaning that the username or email or password doesn't exist.
+		if($user == false) 
+		{
+			$this->errors[] = $this->ci->lang->line('us_bad_email_pass');
+			return false;
+		}
+		
 		if (is_array($user))
 		{
 			$user = $user[0];
@@ -358,7 +365,7 @@ class Auth  {
 	*/
 	public function user_id() 
 	{
-		return $this->ci->session->userdata('user_id');
+		return (int) $this->ci->session->userdata('user_id');
 	}
 	
 	//--------------------------------------------------------------------
@@ -458,10 +465,12 @@ class Auth  {
 			// if true parameter
 			// Did we set a custom var for this?
 		*/
-		if (config_item('auth.use_usernames') == 2)
+		/*
+		if (config_item('auth.use_own_names'))
 		{
 			return $this->ci->session->userdata('auth_custom');
 		}
+		*/
 		
 		logit('[Auth.user_name()] - Why are we going through DB?' , 'warn');
 		
@@ -948,7 +957,7 @@ class Auth  {
 			$us_custom = $email;
 		else
 			// For backward compatibility, defaults to username
-			$us_custom = config_item('auth.use_usernames') == 2 ? $user_name : $username;
+			$us_custom = config_item('auth.use_own_names') ? $user_name : $username;
 		
 		// Save the user's session info
 		if (!class_exists('CI_Session'))

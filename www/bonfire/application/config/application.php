@@ -1,4 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$config['auth.use_extended_profile'] = 0;
 /*
 	Copyright (c) 2011 Lonnie Ezell
  
@@ -21,8 +23,8 @@
 	THE SOFTWARE.
 */
  
-$config['site.title'] = "Maps3.org.uk";
-$config['site.system_email'] = "grahamjones139@gmail.com";
+$config['site.title'] = "";
+$config['site.system_email'] = "";
 $config['site.status'] = 1;		// 0 = offline, 1 = online
 $config['site.list_limit'] = 25;
  
@@ -57,7 +59,7 @@ $config['site.backup_folder']	= 'archives/';
 $config['auth.allow_register'] = 1;
  
 // Type of login allowed ('email', 'username', 'both')
-$config['auth.login_type'] = "both";
+$config['auth.login_type'] = "email";
  
 // Whether usernames are used in the system (0:no, 1:yes, 2:yes+ownname)
 $config['auth.use_usernames'] = 1;
@@ -67,13 +69,12 @@ $config['auth.allow_remember'] = 1;
  
 // How long should a user be remembered in the system? In seconds.
 $config['auth.remember_length'] = 1209600;
+
+$config['auth.use_own_names'] = 0;
  
 // Should we do a custom login redirect, or just go to '/'?
 $config['auth.do_login_redirect'] = 1;
- 
-// Does User accounts have extended profile? Enabling will allow meta user data (wip)
-// 	also omits some default springboard user fields (eg: omits address fields) to allow customization.
-$config['auth.use_extended_profile'] = 0;
+
  
 //--------------------------------------------------------------------
 // !CONTEXTS
@@ -105,7 +106,7 @@ $config['module_permissions'] = array(
 	'content'		=> array(
 		'views'		=> 'Site.Content.View'
 	),
-	'stats'			=> array(
+	'reports'		=> array(
 		'emailer'	=> 'Bonfire.Emailer.View'
 	),
 	'appearance'	=> array(

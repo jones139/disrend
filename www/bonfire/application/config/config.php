@@ -32,7 +32,7 @@ $config['base_url']	= '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
  
 /*
 |--------------------------------------------------------------------------
@@ -230,7 +230,7 @@ $config['cache_path'] = APPPATH .'cache/';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'booya';
+$config['encryption_key'] = "e58cfcfe44d436c7fe5faeb6cae2e36e";
  
 /*
 |--------------------------------------------------------------------------
