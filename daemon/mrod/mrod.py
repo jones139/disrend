@@ -328,6 +328,8 @@ if __name__ == "__main__":
     settingsFile = open(options.settings)
     settingsJSON = settingsFile.read()
 
+    print "sys.path[0]=",sys.path[0]
+
 
     if (options.verbose): print "Mapspec is:\n%s\n" % mapSpecJSON
     renderMap(mapSpecJSON,settingsJSON)
