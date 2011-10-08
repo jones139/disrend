@@ -323,12 +323,15 @@ if __name__ == "__main__":
     else:
         infile = open(infname)
 
+    print "sys.path[0] = ",sys.path[0]
+
     mapSpecJSON = infile.read()
 
     settingsFile = open(options.settings)
     settingsJSON = settingsFile.read()
 
     print "sys.path[0]=",sys.path[0]
+
 
 
     if (options.verbose): print "Mapspec is:\n%s\n" % mapSpecJSON
