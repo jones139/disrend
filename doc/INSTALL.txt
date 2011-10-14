@@ -1,0 +1,12 @@
+Disrend Installation Instructions
+=================================
+
+
+Web Server
+----------
+1.  Assumes:  web server installed and working with php and mysql support.
+2.  Create a mysql user, password and database for use by disrend.
+3.  Copy the contents of the disrend 'www' directory into the web server directory (e.g. /var/www/disrend)
+4.  Edit bonfire/application/config/config.php to add 'index.php' as the 'index_file' parameter.
+5.  Set the correct folder permissions to allow bonfire automatic configuration by executing sudo sh ./setFolderPerms.sh
+
