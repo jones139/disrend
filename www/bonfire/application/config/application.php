@@ -23,8 +23,8 @@ $config['auth.use_extended_profile'] = 0;
 	THE SOFTWARE.
 */
  
-$config['site.title'] = "";
-$config['site.system_email'] = "";
+$config['site.title'] = "Maps3.org.uk";
+$config['site.system_email'] = "grahamjones139@gmail.com";
 $config['site.status'] = 1;		// 0 = offline, 1 = online
 $config['site.list_limit'] = 25;
  
