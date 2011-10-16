@@ -118,6 +118,26 @@ class Front_Controller extends Base_Controller {
 	public function __construct() 
 	{
 		parent::__construct();
+		/*
+		 * GJ Added database activities and users models and libraries
+		 * so that we can optionally check authentication in front end controllers
+		 */
+		$this->load->database();
+		$this->load->library('session');
+		
+		$this->load->model('activities/Activity_model', 'activity_model', true);
+		
+		// Auth setup
+		$this->load->model('users/User_model', 'user_model');
+		$this->load->library('users/auth');
+		$this->load->model('permissions/permission_model');
+		$this->load->model('roles/role_permission_model');
+		$this->load->model('roles/role_model');
+		
+		// Load additional libraries
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->form_validation->CI =& $this;	// Hack to make it work properly with HMVC
 	}
 	
 	//--------------------------------------------------------------------

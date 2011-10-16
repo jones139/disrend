@@ -81,6 +81,18 @@ class Debug {
     echo "</ol>";
   }
 
+
+  public static function showClassVars($class=null)
+  {
+    $class_vars = get_class_vars($class);
+    
+    echo "<ol>";
+    foreach ($class_vars as $var_name) {
+      echo "<li>$var_name</li>";
+    }
+    echo "</ol>";
+  }
+
 }
 
 // End Console class

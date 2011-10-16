@@ -61,40 +61,57 @@ class symbolsets extends Front_Controller {
 		$fileData = $this->upload->data();
 		echo "<p>Upload Successful - file = ".$fileData['file_name'],"</p>";
 
-		$filename = $config['upload_path']."/".$fileData['file_name'];
-		$this->load->library('archive');
+		$fname = $config['upload_path']."/".$fileData['file_name'];
+		//$fh = gzopen($fname,"rb");
 
-		$this->debug->showClassMethods('archive');
+		$handle = fopen($fname, "r");
+		$contents = fread($handle, filesize($fname));
+		fclose($handle);
 
-		$arch = new $this->archive->gzip_file($fname);
+		$ssdata = array();
+		$ssdata['symbolsets_userid']=0;		$ssdata['symbolsets_description'] = $_POST['symbolsets_description'];
+		$ssdata['symbolsets_symbolsetarch'] = $contents;
 
-		//$handle = fopen($filename, "r");
-		//$contents = fread($handle, filesize($filename));
-		//fclose($handle);
+		$this->debug->showArr($ssdata);
+		
+		//$insert_id = $this->symbolsets_model->insert($ssdata);
+		$insert_id = $this->save_symbolset($ssdata);
+		echo "<p>insert ID = ".$insert_id."</p>";
+		if ($insert_id)
+		  {
+		    // Log the activity
+		    $this->activity_model->log_activity($this->auth->user_id(), lang('symbolsets_act_create_record').': ' . $insert_id . ' : ' . $this->input->ip_address(), 'symbolsets');
+		    
+		    Template::set_message(lang("symbolsets_create_success"), 'success');
+		    Template::redirect('/symbolsets');
+		  }
+		else 
+		  {
+		    Template::set_message(lang('symbolsets_create_failure') 
+					  . $this->symbolsets_model->error, 
+					  'error');
+		  }
 	      }
-	      
-
-		if ($insert_id = $this->save_symbolset())
-		{
-		  // Log the activity
-		  $this->activity_model->log_activity($this->auth->user_id(), lang('symbolsets_act_create_record').': ' . $insert_id . ' : ' . $this->input->ip_address(), 'symbolsets');
-					
-		  Template::set_message(lang("symbolsets_create_success"), 'success');
-		  Template::redirect('/symbolsets');
-		}
-	      else 
-		{
-		  Template::set_message(lang('symbolsets_create_failure') 
-					. $this->symbolsets_model->error, 
-					'error');
-		}
 	    }
-	  
-	  //Template::set('toolbar_title', lang('symbolsets_create_new_button'));
-	  //Template::set('toolbar_title', lang('symbolsets_create') . ' SymbolSets');
 	  Template::render();
+	  
+	}
+
+
+	public function getSymbolSet($id)
+	{
+	  $data = $this->symbolsets_model->find($id);
+	  if ($data) {
+	    echo $data->symbolsets_symbolsetarch;
+	  } else
+	    {
+	      echo "<h1>ERROR - Failed to get symbolset ${id}</h1>";
+	    }
 
 	}
+
+
+	//--------------------------------------------------------------------
 
 
 	/*
@@ -107,13 +124,9 @@ class symbolsets extends Front_Controller {
 			An INT id for successful inserts. If updating, returns TRUE on success.
 			Otherwise, returns FALSE.
 	*/
-	private function save_symbolset() 
+	private function save_symbolset($data) 
 	{	
-	  $data = array();
-	  $data['userid']=0;
-	  $data['description']=$_POST['symbolsets_description'];
-	  $id = $this->symbolsets_model->insert($_POST);
-			
+	  $id = $this->symbolsets_model->insert($data);
 	  if (is_numeric($id))
 	    {
 	      $return = $id;
@@ -121,6 +134,7 @@ class symbolsets extends Front_Controller {
 	    {
 	      $return = FALSE;
 	    }
+	  return $return;
 	}
 	//--------------------------------------------------------------------
 
