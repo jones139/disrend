@@ -35,3 +35,9 @@
 		</tbody>
 	</table>
 <?php endif; ?>
+
+<?php
+		echo anchor(site_url('/symbolsets/create'), 
+		lang('symbolsets_create_new'), 
+		array("class" => "ajaxify")) 
+?>

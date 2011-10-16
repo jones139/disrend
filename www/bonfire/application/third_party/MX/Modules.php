@@ -164,11 +164,8 @@ class Modules
 	* Scans for files located within modules directories.
 	* Also scans application directories for models, plugins and views.
 	* Generates fatal error if file not found.
-	* The optional parameter $errmsg allows the message associated with
-	* the error to be customised if necessary.
 	**/
-	public static function find($file, $module, $base, 
-				    $errmsg = "Unable to locate the file: ") {
+	public static function find($file, $module, $base) {
 	
 		$segments = explode('/', $file);
 
@@ -196,9 +193,10 @@ class Modules
 		/* is the file in an application directory? */
 		if ($base == 'views/' OR $base == 'plugins/') {
 			if (is_file(APPPATH.$base.$path.$file_ext)) return array(APPPATH.$base.$path, $file);	
-			show_error("{$errmsg} {$path}{$file_ext}");
+			show_error("Unable to locate the {$base} file: {$path}{$file_ext}");
 		}
 
+		log_message('debug', "Unable to locate the {$base} file: {$path}{$file_ext}");
 		return array(FALSE, $file);	
 	}
 	
