@@ -69,7 +69,8 @@ class symbolsets extends Front_Controller {
 		fclose($handle);
 
 		$ssdata = array();
-		$ssdata['symbolsets_userid']=0;		$ssdata['symbolsets_description'] = $_POST['symbolsets_description'];
+		$ssdata['symbolsets_userid']=$this->auth->user_id();		
+		$ssdata['symbolsets_description'] = $_POST['symbolsets_description'];
 		$ssdata['symbolsets_symbolsetarch'] = $contents;
 
 		$this->debug->showArr($ssdata);
@@ -103,10 +104,10 @@ class symbolsets extends Front_Controller {
 	  $data = $this->symbolsets_model->find($id);
 	  if ($data) {
 	    echo $data->symbolsets_symbolsetarch;
-	  } else
-	    {
-	      echo "<h1>ERROR - Failed to get symbolset ${id}</h1>";
-	    }
+	  } 
+	  else  {
+	    echo "<h1>ERROR - Failed to get symbolset ${id}</h1>";
+	  }
 
 	}
 
