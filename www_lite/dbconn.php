@@ -1,4 +1,10 @@
 <?php
-$dbconn = mysql_connect("host=localhost dbname=townguide user=www password=1234")
-    or die('Could not connect: ' . mysql_last_error());
+///////////////////////////////////////////////////////////
+// Connect to the database.
+// This is the only file that needs customising to define the
+// database to be used, user name, password etc.
+//////////////////////////////////////////////////////////////
+$dbconn = mysql_connect("localhost","printmaps","1234")
+    or die('Could not connect: ' . mysql_error());
+mysql_select_db("printmaps",$dbconn);
 ?>
