@@ -101,6 +101,29 @@ function updatePermalink() {
 
 }
 
+function initialiseFromJSON(jobNo) {
+	var postData = { 
+	    'jobNo':JE.jobNo,
+	    'infoType':'1'
+	};
+	jQuery.post("getJobInfo.php",postData,initialiseFromJSONCallback);
+}
+
+function initialiseFromJSONCallback(data, textStatus,jqXHR) {
+    var dataObj = JSON.parse(data);
+    alert("initialiseFromJSONCallback - data = "+data); 
+
+    jQuery("#titleInput").val(dataObj.title);
+    jQuery("#rendererSelect").val(dataObj.renderer);
+    jQuery("#paperSizeSelect").val(dataObj.paperSize);
+    jQuery("#mapCenterLon").val(dataObj.mapCenterLon);
+    jQuery("#mapCenterLat").val(dataObj.mapCenterLat);
+    jQuery("#mapSizeW").val(dataObj.mapSizeW);
+    jQuery("#mapSizeH").val(dataObj.mapSizeH);
+    setMapCenter();
+}
+
+
 function initialise_jobEditor() {
     // Set the URL of the source of data for the map (../server)
     // Thanks to http://programmingsolution.net/post/
@@ -128,6 +151,9 @@ function initialise_jobEditor() {
     if ('z' in urlVars) {
 	JE.zoom = parseFloat(urlVars['z']);
     } 
+    if ('jobNo' in urlVars) {
+	JE.jobNo = parseFloat(urlVars['jobNo']);
+    } 
 
     // Initialise the map object
     JE.map = new L.Map('map');
@@ -150,4 +176,7 @@ function initialise_jobEditor() {
     updateMapCenterTextBoxes();
     updatePermalink();
 
+    if (JE.jobNo >= 1) {
+	initialiseFromJSON(JE.jobNo);
+    }
 }
