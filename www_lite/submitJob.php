@@ -1,29 +1,28 @@
 <?php
-  $jobData       = $_REQUEST['jobData'] ;
-
+  $jobData       = $_REQUEST['data'] ;
   $jobObj        = json_decode($jobData);
 
-  $title=$jobObj['title'];
-  $renderer = $jobObj['renderer'];
+  $title=$jobObj->title;
+  $renderer = $jobObj->renderer;
   $nowStr = gmDate("Y-m-d H:i:s");
-  $lat = 0;
-  $lon = 0;
+  $lat = $jobObj->mapCenterLat;
+  $lon = $jobObj->mapCenterLon;
 
   include("APIconfig.php");
   include("dbconn.php");
 
   $query  = "insert into queue (status, title, originlat, originlon,"
-  	  . "subdate, statusdate, renderer, jobConfig) values "
+  	  . "subdate, renderer, jobConfig) values "
   	  . "( 0, "."'".$title."'" 
 	  . ", ".$lat.", ".$lon.", "
-	  . "timestamp '".$nowStr."', timestamp '".$nowStr."',"
+	  . "'".$nowStr."',"
 	  . $renderer."," 
-	  ." '".jobData."') returning jobno;";
+	  ." '".$jobData."');";
        
   $result = mysql_query($query) 
   	  or die('Query failed: ' . mysql_error());
-  $line = pg_fetch_array($result);
-  $jobNo=$line['jobno'];	
+
+  $jobNo=mysql_insert_id();
 
   mkdir ($dataDir."/".$jobNo,0777);
   chmod ($dataDir."/".$jobNo,0777);

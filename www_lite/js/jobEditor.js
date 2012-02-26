@@ -22,7 +22,7 @@ var JE = {};
 
 JE.lat = 54.505;                  // Initial latitude of centre of map.
 JE.lon = -2.0;                    // Initial longitude of centre of map.
-JE.zoom = 5;                      // Initial zoom level.
+JE.zoom = 10;                      // Initial zoom level.
 JE.jobNo = -1;                    // Job number to use to configure default
 //                                    user interface state.
 JE.map;                   // the map object
@@ -47,8 +47,8 @@ function submitButtonCallback() {
 
     postData.data = dataJSON;
 
-    alert("dataJSON="+dataJSON);
-    alert("postData['data'] = "+postData['data']);
+    //alert("dataJSON="+dataJSON);
+    //alert("postData['data'] = "+postData['data']);
 
     jQuery.post("submitJob.php",postData,submitSuccessCallback);
 
@@ -58,12 +58,15 @@ function submitSuccessCallback(data, textStatus,jqXHR) {
     alert("submitSuccessCallback - textStatus = "+textStatus+ " data="+data);
 }
 
+// Put a marker in the centre of the map to help the user align it.
 function drawMapCenterMarker() {
     JE.map.removeLayer(JE.mapCenterMarker);
     JE.mapCenterMarker = new L.Circle(JE.map.getCenter(),10);
     JE.map.addLayer(JE.mapCenterMarker);
 }
 
+// Called whenever the user drags the map to update the lat,lon text boxes
+// in the user interface with the new map centre.
 function updateMapCenterTextBoxes() {
     var mapCenter;
     mapCenter = JE.map.getCenter();
@@ -72,6 +75,8 @@ function updateMapCenterTextBoxes() {
     drawMapCenterMarker();
 }
 
+// Called whenever the lat,lon text boxes are updated to move the map
+// to the new map centre.
 function setMapCenter() {
     var lat,lon;
     var mapCenter;
@@ -82,6 +87,19 @@ function setMapCenter() {
     drawMapCenterMarker();
 }
 
+function updatePermalink() {
+    var lat,lon,z;
+    var pageURL = document.location.href;
+    var baseURL = pageURL.split('?')[0];
+    var queryPart;
+
+    lon = jQuery("#mapCenterLon").val();
+    lat = jQuery("#mapCenterLat").val();
+    z = JE.map.getZoom();
+    queryPart = "?lat="+lat+"&lon="+lon+"&z="+z;
+    jQuery('#permaLink').attr('href',baseURL+queryPart); 
+
+}
 
 function initialise_jobEditor() {
     // Set the URL of the source of data for the map (../server)
@@ -102,37 +120,34 @@ function initialise_jobEditor() {
     //These are used to set up the initial state of the map.
     var urlVars = getUrlVars();
     if ('lat' in urlVars) {
-	lat = parseFloat(urlVars['lat']);
+	JE.lat = parseFloat(urlVars['lat']);
     } 
     if ('lon' in urlVars) {
-	lon = parseFloat(urlVars['lon']);
+	JE.lon = parseFloat(urlVars['lon']);
     } 
     if ('z' in urlVars) {
-	zoom = parseFloat(urlVars['z']);
+	JE.zoom = parseFloat(urlVars['z']);
     } 
 
     // Initialise the map object
     JE.map = new L.Map('map');
-    JE.mapCenterMarker = new L.Circle(new L.LatLng(JE.lat,JE.lon),10);
-    JE.map.addLayer(JE.mapCenterMarker);
-
+    JE.mapCenterMarker = new L.Circle(new L.LatLng(JE.lat,JE.lon),JE.zoom);
     var osmURL = 'http://tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmLayer = new L.TileLayer(osmURL,{maxZoom:18});
     JE.map.addLayer(osmLayer);
-
     JE.map.setView(new L.LatLng(JE.lat,JE.lon), JE.zoom);
-    //JE.map.addEventListener('moveend',updatePermaLink);
-    //JE.map.addEventListener('zoomend',updatePermaLink);
-    
+        
 
     // Set up the callbacks to update the user interface.
     // Set up the Edit Button
     jQuery('#submitButton').click(submitButtonCallback);
     jQuery('#mapCenterLon').change(setMapCenter);
     jQuery('#mapCenterLat').change(setMapCenter);
-
     JE.map.on('dragend',updateMapCenterTextBoxes);
+    JE.map.addEventListener('moveend',updatePermalink);
+    JE.map.addEventListener('zoomend',updatePermalink);
 
     updateMapCenterTextBoxes();
+    updatePermalink();
 
 }

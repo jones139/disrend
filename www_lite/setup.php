@@ -12,15 +12,16 @@ mysql_query($sql,$dbconn)
 
 $sql = <<<'EOD'
 create table queue (
-       	     	   jobNo int, 
+       	     	   jobNo int not null auto_increment, 
 		   status int,
                    title varchar(256),
 		   originLat float,
 		   originLon float,
+                   statusDate timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                    subDate timestamp,
-                   statusDate timestamp,
 		   renderer int,
-                   jobConfig varchar(10000)
+                   jobConfig varchar(10000),
+		   primary key (jobNo)
 );
 EOD;
 
