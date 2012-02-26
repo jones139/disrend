@@ -20,7 +20,7 @@ create table queue (
                    subDate timestamp,
                    statusDate timestamp,
 		   renderer int,
-                   xml varchar(10000)
+                   jobConfig varchar(10000)
 );
 EOD;
 

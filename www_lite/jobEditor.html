@@ -1,0 +1,64 @@
+<html>
+<head>
+  <title>OSM Print Maps Job Editor</title>
+  <link rel="stylesheet" href="css/jobEditor.css" />
+  <link rel="stylesheet" href="js/leaflet.css" />
+  <link id="favicon" rel="shortcut icon" href="images/beer.ico" />
+</head>
+<body>
+  <div id="map">Map Goes Here</div>
+  <div id="sidebar">
+    <div id="renderer">
+      <label>Map Title:</label>
+      <input id="titleInput" value="Map Title">
+      <br/>
+      <label>Map Type:</label>
+      <SELECT id="rendererSelect">
+	<option selected value="townguide">townguide</option>
+	<option value="mapbook">mapbook</option>
+      </SELECT><br/>
+      <label>Paper Size:</label>
+      <SELECT id="paperSizeSelect">
+	<option selected value="A4">A4</option>
+	<option value="A3">A3</option>
+	<option value="A2">A2</option>
+	<option value="A1">A1</option>
+	<option value="A0">A0</option>  
+      </SELECT><br/>
+      <label>Map Centre (lon,lat):</label>
+      <input id="mapCenterLon" type="text" size="5" value="lon"/>,
+      <input id="mapCenterLat" type="text" size="5" value="lat"/>
+      <br/>
+      <label>Map Size (w,h) km:</label>
+      <input id="mapSizeW" type="text" size="3" value="5"/>,
+      <input id="mapSizeH" type="text" size="3" value="5"/>
+      <br/>
+    </div>
+    <label>Map Style:</label>
+      <SELECT id="mapStyleSelect">
+	<option selected value="Default OSM">Default OSM</option>
+      </SELECT><br/>
+    
+    <div id="townguide">
+
+    </div>
+
+    <div id="mapbook">
+
+    </div>
+
+
+<button id="submitButton">Submit Job</button>
+
+
+</div>
+
+<script src="js/leaflet.js"></script>
+<script src="js/jquery-1.7.min.js"></script>
+<script src="js/geturl.js"></script>
+<script src="js/jobEditor.js"></script>
+
+
+</body>
+
+</html>
