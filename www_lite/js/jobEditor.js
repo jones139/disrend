@@ -31,6 +31,24 @@ $(document).ready(function(){
           initialise_jobEditor();
 });
 
+function listQueueButtonCallback(data) {
+    var row;
+    var html;
+    html = "<table><tr><th>JobNo</th><th>Status</th><th>Title</th></tr>";
+    for (row in data) {
+	html = html + "<tr>";
+	html = html + "<td>"+data[row]['jobNo']+"</td>";
+	html = html + "<td>"+data[row]['status']+"</td>";
+	html = html + "<td>"+data[row]['title']+"</td>";
+	html = html + "</tr>";
+	
+    }
+    html = html+"</table>";
+    $("#dialog").dialog('option', 'title', 'Job Queue');
+    //$("#dialog").html(JSON.stringify(data));
+    jQuery("#dialog").html(html);
+    $( "#dialog" ).dialog( "open" );
+}
 
 function submitButtonCallback() {
     var dataObj = {};
@@ -167,6 +185,15 @@ function initialise_jobEditor() {
     // Set up the callbacks to update the user interface.
     // Set up the Edit Button
     jQuery('#submitButton').click(submitButtonCallback);
+    jQuery('#listQueueButton').click(
+	function(){
+	    jQuery.ajax({
+		url: "getJobList.php",
+		context: document.body,
+		success: listQueueButtonCallback
+	    });
+	}
+    );
     jQuery('#mapCenterLon').change(setMapCenter);
     jQuery('#mapCenterLat').change(setMapCenter);
     JE.map.on('dragend',updateMapCenterTextBoxes);

@@ -3,6 +3,7 @@
   <title>OSM Print Maps Job Editor</title>
   <link rel="stylesheet" href="css/jobEditor.css" />
   <link rel="stylesheet" href="js/leaflet.css" />
+  <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.18.custom.css" />
   <link id="favicon" rel="shortcut icon" href="images/beer.ico" />
 </head>
 <body>
@@ -50,16 +51,30 @@
 
 <a href="" id="permaLink">PermaLink</a><br/>
 <button id="submitButton">Submit Job</button>
+<button id="listQueueButton">List Job Queue</button>
 
 
 </div>
 
+<div id="dialog" title="My Dialog">
+  <p>Dialog text goes here</p>
+</div>
+
 <script src="js/leaflet.js"></script>
 <script src="js/jquery-1.7.1.min.js"></script>
+<script src="js/jquery-ui-1.8.18.custom.min.js"></script>
 <script src="js/geturl.js"></script>
 <script src="js/jobEditor.js"></script>
 
-
+<script>
+  $(function() {
+     $( "#dialog" ).dialog({
+        autoOpen: false,
+        show: "blind",
+        hide: "explode" 
+      });
+  });
+</script>
 </body>
 
 </html>
