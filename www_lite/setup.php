@@ -4,6 +4,9 @@
 //////////////////////////////////////////////////////////////
 
 include("dbconn.php");
+include("APIConfig.php");
+
+
 
 $sql = "drop table if exists queue;";
 mysql_query($sql,$dbconn)
