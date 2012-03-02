@@ -13,7 +13,7 @@
 
   $query  = "insert into queue (status, title, originlat, originlon,"
   	  . "subdate, renderer, jobConfig) values "
-  	  . "( 0, "."'".$title."'" 
+  	  . "( 1, "."'".$title."'" 
 	  . ", ".$lat.", ".$lon.", "
 	  . "'".$nowStr."',"
 	  . $renderer."," 
