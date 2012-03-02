@@ -34,11 +34,11 @@ $(document).ready(function(){
 function listQueueButtonCallback(data) {
     var row;
     var html;
-    html = "<table><tr><th>JobNo</th><th>Status</th><th>Title</th></tr>";
+    html = "<table border='1'><tr><th>JobNo</th><th>Status</th><th>Title</th></tr>";
     for (row in data) {
 	html = html + "<tr>";
 	html = html + "<td>"+data[row]['jobNo']+"</td>";
-	html = html + "<td>"+data[row]['status']+"</td>";
+	html = html + "<td>"+JE.statuses[data[row]['status']]+"</td>";
 	html = html + "<td>"+data[row]['title']+"</td>";
 	html = html + "</tr>";
 	
@@ -73,7 +73,12 @@ function submitButtonCallback() {
 }
 
 function submitSuccessCallback(data, textStatus,jqXHR) {
-    alert("submitSuccessCallback - textStatus = "+textStatus+ " data="+data);
+    var html;
+    html = "<p>Job Number = "+data+"</p>";
+    $("#dialog").dialog('option', 'title', 'Job Submitted Successfully');
+    jQuery("#dialog").html(html);
+    $( "#dialog" ).dialog( "open" );
+    //alert("submitSuccessCallback - textStatus = "+textStatus+ " data="+data);
 }
 
 // Put a marker in the centre of the map to help the user align it.
@@ -181,6 +186,19 @@ function initialise_jobEditor() {
     JE.map.addLayer(osmLayer);
     JE.map.setView(new L.LatLng(JE.lat,JE.lon), JE.zoom);
         
+
+    // Initialise the array of status descriptions
+    jQuery.ajax({
+	url:"getStatuses.php",
+	success:function(data) {
+	    JE.statuses = {};
+	    for (row in data) {
+		JE.statuses[data[row]['statusNo']] = data[row]['title'];
+	    }
+	}
+    }
+	       );
+
 
     // Set up the callbacks to update the user interface.
     // Set up the Edit Button
