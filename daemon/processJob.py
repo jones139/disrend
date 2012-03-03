@@ -1,11 +1,14 @@
 import json,os
+from pyproj import Proj
 from queueMgr import queueMgr
 from dataMgr import dataMgr
+from paperSize import getPaperSize
 
 class jobProcessor:
     def __init__(self,cfg):
         print "__init__"
         self.cfg = cfg
+        self.sysCfg = cfg
         self.qm = queueMgr(self.cfg['server'],self.cfg['apiPrefix'])
         self.dm = dataMgr(self.cfg)
 
@@ -18,6 +21,39 @@ class jobProcessor:
         f = open(configFname,'w')
         f.write(json.dumps(self.jobCfg))
         f.close()
+
+
+    def renderMapbook(self,jobNo):
+        print "renderMapbook"
+        p1 = Proj(init='epsg:4326') # lat-lon
+        p2 = Proj(init='epsg:900913') # Google spherical mercator.
+        (x,y) = p2(float(self.jobCfg['mapCenterLon']),
+                   float(self.jobCfg['mapCenterLat']))
+        print (x,y)
+
+        (w,h) = getPaperSize({'size':self.jobCfg['paperSize'],
+                              'orientation':'portrait'},
+                             True)
+        print (w,h)
+        w = w * 72 / 2.5   # convert from cm to points.
+        h = h * 72 / 2.5   # convert from cm to points.
+
+        print (w,h)
+
+        cmdline = "%s --startx %f --starty %f --width %f --pagewidth %f --pageheight %f --rows %d --columns %d --mapfile %s --outputfile %s/output.pdf" % \
+            (self.sysCfg['mapbook'],
+             x,y,
+             float(self.jobCfg['mapSizeW']),
+             w,h,
+             float(5),float(5),
+             self.jobCfg['mapnikStyleFile'],
+             self.jobCfg['jobDir']
+             )
+        print cmdline
+        retval = os.system(cmdline)
+
+    def renderTownguide(self,jobNo):
+        print "renderTownguide"
 
     def processJob(self):
         """Gets the next waiting job off the queue
@@ -40,6 +76,17 @@ class jobProcessor:
                 self.dm.getGridData(self.jobCfg)
                 self.dm.getMapnikStyleFile(self.jobCfg)
                 print self.jobCfg['mapnikStyleFile']
+
+                if (self.jobCfg['renderer']=="1"):
+                    print "calling towngude renderer"
+                    self.renderTownguide(jobNo)
+                elif (self.jobCfg['renderer']=="2"):
+                    print "calling mapbook renderer"
+                    self.renderMapbook(jobNo)
+
+                
+
+
         else:
             print "no Job in Queue - exiting"
 
