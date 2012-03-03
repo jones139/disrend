@@ -4,9 +4,11 @@
   include("APIconfig.php");
   include("dbconn.php");
 
-  $query  = "select jobno from queue where renderer =".$rendererNo.
-  	  " and status=0 order by jobno asc";
-  print $query;
+  #$query  = "select jobno from queue where renderer =".$rendererNo.
+  #	  " and status=1 order by jobno asc";
+  $query  = "select jobno from queue where ".
+  	  " status=1 order by jobno asc";
+  #print $query;
   $result = mysql_query($query) 
   	  or die('Query failed: ' . mysql_error());
   if (mysql_num_rows($result)>0) {

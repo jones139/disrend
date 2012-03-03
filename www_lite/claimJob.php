@@ -8,7 +8,7 @@
   $query  = "update queue set status=2, statusDate='".$nowStr.
   	  "' where jobNo =".$jobNo.
 	  " and status = 1";
-  print $query;
+  #print $query;
   $result = mysql_query($query) 
   	  or die('Query failed: ' . mysql_error());
   if (mysql_affected_rows()>0) {
