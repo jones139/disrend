@@ -1,0 +1,9 @@
+{
+  "server" : "localhost",
+  "apiPrefix" : "printmaps",
+  "dataDir" : "/usr/local/printmaps/jobData",
+  "dbname" : "osm_gb",
+  "dbuser" : "graham",
+  "dbpass" : "1234",
+  "osmMapnikStyleFile" : "/etc/mapnik-osm-data/osm2.xml"
+}

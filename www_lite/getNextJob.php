@@ -1,7 +1,7 @@
 <?php
   $rendererNo       = $_REQUEST['rendererNo'] ;
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   #$query  = "select jobno from queue where renderer =".$rendererNo.
