@@ -1,15 +1,41 @@
+""" queueMgr is a class to enable python applications to interact with the
+    printmaps API (http://github.com/jones139/disrend).
+
+    Usage:     
+    qm = queueMgr("www.maps.webhop.net","printmaps")
+    jobNo = qm.getNextJobNo
+
+    etc. etc.
+
+"""
+
 import httplib, urllib
 import json
 
 class queueMgr:
     """Job Queue Manager - retrieves jobs and uploads results to the server.""" 
     def __init__(self,serverURL,apiPrefix):
+        """Initialise the queue manager.  serverURL is the url
+        of the queue server (e.g. www.maps.webhop.net).
+        apiPrefix is the directory on the server containing the api
+        files (e.g. "printmaps" if the server API address is
+        maps.webhop.net/printmaps
+        """
         self.conn = httplib.HTTPConnection(serverURL)
         self.serverURL = serverURL
         self.apiPrefix = apiPrefix
+
+        self.FILE_CONFIG = 1
+        self.FILE_LOG = 2
+        self.FILE_OUTPUT = 3
+        self.FILE_THUMB = 4
     
 
     def getNextJobNo(self):
+        """
+        Returns an integer which is the job number of the next job
+        to be processed in the queue, or zero if there is an error.
+        """
         self.conn.request("GET", "/%s/getNextJob.php" % (self.apiPrefix))
         response = self.conn.getresponse()
         #print response.status, response.reason
@@ -17,6 +43,14 @@ class queueMgr:
         return int(data)
 
     def getJobInfo(self,jobNo,infoType):
+        """
+        Returns information about job number jobNo.
+        infoType defines what information is returned:
+        qm.FILE_CONFIG - the json configuration file (returned as an object).
+        qm.FILE_LOG - the data processor log file.
+        qm.FILE_OUTPUT - the main output of the data processor (pdf file)
+        qm.FILE_THUMB - the thumbnail image of the output.
+        """
         self.conn.request("GET", 
                           "/%s/getJobInfo.php?jobNo=%s&infoType=%s" % 
                           (self.apiPrefix,jobNo,infoType)
@@ -27,10 +61,17 @@ class queueMgr:
         return (data)
 
     def getJobConfig(self,jobNo):
-        data=self.getJobInfo(jobNo,1)
+        """
+        Returns the configuration file for job number jobNo.
+        This is equivalent to getJobInfo(jobNo,1).
+        """
+        data=self.getJobInfo(jobNo,self.FILE_CONFIG)
         return(json.loads(data))
 
     def claimJob(self,jobNo):
+        """
+        Tells the server that we are claiming this job for processing.
+        """
         self.conn.request("GET", 
                           "/%s/claimJob.php?jobNo=%s" % 
                           (self.apiPrefix,jobNo)
@@ -47,7 +88,11 @@ class queueMgr:
 
     def uploadFile(self,jobNo,fname,ftype):
         """uploads the file 'fname' to the server, telling the server
-        that the file is of type ftype, and that it is for job number jobNo."""
+        that the file is of type ftype, and that it is for job number jobNo.
+        qm.FILE_LOG  - log file
+        qm.FILE_OUTPUT  - main output (pdf file)
+        qm.FILE_THUMB  - thumbnail image of output.
+        """
         f = open(fname,'r')
         fileData = f.read()
         f.close()
@@ -66,13 +111,16 @@ class queueMgr:
         print data
 
     def quitQueueMgr(self):
+        """
+        Closes the connectino to the server
+        """
         self.conn.close()
 
 
 
 if __name__ == "__main__":
     print "queueMgr.py"
-    qm = queueMgr("www.maps.webhop.net","printmaps")
+    qm = queueMgr("localhost","printmaps")
     jobNo = qm.getNextJobNo();
     print "jobNo=%d\n" % (jobNo)
 
@@ -94,14 +142,3 @@ if __name__ == "__main__":
 
         qm.quitQueueMgr()
 
-#params = urllib.urlencode({'@number': 12524, '@type': 'issue', '@action': 'show'})
-#headers = {"Content-type": "application/x-www-form-urlencoded",
-#           "Accept": "text/plain"}
-#conn = httplib.HTTPConnection("www.maps.webhop.net")
-#conn.request("GET", "/printmaps/getNextJob.php")
-#response = conn.getresponse()
-#print response.status, response.reason
-#data = response.read()
-#print dir(data)
-#print data
-#conn.close()
