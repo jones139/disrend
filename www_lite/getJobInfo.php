@@ -7,7 +7,7 @@
 #	      4 - Job Result Thumbnail (png)
 #
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $jobNo      = $_REQUEST['jobNo'] ;
@@ -22,15 +22,29 @@
 	     print $row['jobConfig'];
 	     break;
   	case "2":
-	     echo "2 - job log file";
+	     $fname =$dataDir.'/'.$jobNo.'/logFile.txt';
+	     if (file_exists($fname)) {
+	       readfile($fname);
+	     } else {
+	       print "ERROR - FILE ".$fname." DOES NOT EXIST";
+	     }
 	     break;
   	case "3":
-	     echo "3 - Job Result (pdf)";
+	     $fname =$dataDir.'/'.$jobNo.'/resultFile.pdf';
+	     if (file_exists($fname)) {
+	       readfile($fname);
+	     } else {
+	       print "ERROR - FILE ".$fname." DOES NOT EXIST";
+	     }
 	     break;
   	case "4":
-	     echo "4 - thumbnail";
+	     $fname =$dataDir.'/'.$jobNo.'/thumbnail.png';
+	     if (file_exists($fname)) {
+	       readfile($fname);
+	     } else {
+	       print "ERROR - FILE ".$fname." DOES NOT EXIST";
+	     }
 	     break;
-
   } 
 
   #mkdir ($dataDir."/".$jobNo,0777);
