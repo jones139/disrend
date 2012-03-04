@@ -20,35 +20,36 @@
     <div id='tabs-1'>
       <div id="map">Map Goes Here</div>
       <div id="sidebar">
-	<div id="renderer">
-	  <label>Map Title:</label>
-	  <input id="titleInput" value="Map Title">
-	  <br/>
-	  <label>Map Type:</label>
-	  <SELECT id="rendererSelect">
-	    <option selected value="simpleImage">Simple Image</option>
-	    <option value="townguide">townguide</option>
-	    <option value="mapbook">mapbook</option>
-	  </SELECT><br/>
-	  <label>Paper Size:</label>
-	  <SELECT id="paperSizeSelect">
-	    <option selected value="A4">A4</option>
-	    <option value="A3">A3</option>
-	    <option value="A2">A2</option>
-	    <option value="A1">A1</option>
-	    <option value="A0">A0</option>  
-	  </SELECT><br/>
-	  <label>Map Centre (lon,lat):</label>
-	  <input id="mapCenterLon" type="text" size="5" value="lon"/>,
-	  <input id="mapCenterLat" type="text" size="5" value="lat"/>
-	  <br/>
-	  <label>Map Size (w,h) km:</label>
-	  <input id="mapSizeW" type="text" size="3" value="5"/>,
-	  <input id="mapSizeH" type="text" size="3" value="5"/>
-	  <br/>
-	</div>
-
 	<div id='accordion'>
+	  <h3><a href='#'>General Map Configuration</a></h3>
+	  <div id="renderer">
+	    <label>Map Title:</label>
+	    <input id="titleInput" value="Map Title">
+	    <br/>
+	    <label>Map Type:</label>
+	    <SELECT id="rendererSelect">
+	      <option selected value="simpleImage">Simple Image</option>
+	      <option value="townguide">townguide</option>
+	      <option value="mapbook">mapbook</option>
+	    </SELECT>
+	    <label>Paper Size:</label>
+	    <SELECT id="paperSizeSelect">
+	      <option selected value="A4">A4</option>
+	      <option value="A3">A3</option>
+	      <option value="A2">A2</option>
+	      <option value="A1">A1</option>
+	      <option value="A0">A0</option>  
+	    </SELECT><br/>
+	    <label>Map Centre (lon,lat):</label>
+	    <input id="mapCenterLon" type="text" size="5" value="lon"/>,
+	    <input id="mapCenterLat" type="text" size="5" value="lat"/>
+	    <br/>
+	    <label>Map Size (w,h) km:</label>
+	    <input id="mapSizeW" type="text" size="3" value="5"/>,
+	    <input id="mapSizeH" type="text" size="3" value="5"/>
+	    <br/>
+	  </div>
+	  
 	  <h3><a href='#'>Map Style Options</a></h3>
 	  <div id='mapstyle'>
 	    <label>Map Style:</label>

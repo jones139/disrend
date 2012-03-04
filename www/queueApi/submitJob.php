@@ -8,7 +8,7 @@
   $lat = $jobObj->mapCenterLat;
   $lon = $jobObj->mapCenterLon;
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $query  = "insert into queue (status, title, originlat, originlon,"
