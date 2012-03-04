@@ -1,0 +1,5 @@
+README
+======
+This www_lite directory is a very lightweight web service - nothing
+clever like user authentication etc.  It is based on the
+townguide web service (http://code.google.com/p/townguide).

@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>Job Queue API Reference</title>
+</head>
+<body>
+<h1>Job Queue API Reference</h1>
+
+<h2>Interface for User Front-End</h2>
+<h3>Submit a Job</h3>
+submitJob.php - GET or POST Data should include a 'data' item which is a JSON
+encoded string describing the job.
+
+<h3>Retry a Job</h3>
+retryJob.php?JobNo=[job number] - Re-try running job number JobNo
+
+<h3>Delete a Job</h3>
+deleteJob.php?JobNo=[job number] - Delete job number JobNo and all its files.
+
+<h3>Get Job Information</h3>
+getJobInfo.php?JobNo=[job number]&InfoType=[info type] - retrieve job information for job number JobNo.   InfoType specifies the information to retrieve.
+<ol>
+  <li>InfoType = 1 - Job Configuration Data (JSON)</li>
+  <li>InfoType = 2 - Job Log File (text)</li>
+  <li>InfoType = 3 - Job Result (pdf)</li>
+  <li>InfoType = 4 - Job Result Thumbnail (png)</li>
+</ol>
+
+<h2>Interface for Renderers</h2>
+<h3>Get Next Job to be Rendered</h3>
+getNextJob.php?RendererNo=[Renderer No] - Returns the job number of the next job to render.   The renderer then uses getJobInfo.php to retrieve the job data.
+
+<h3>Claim Job for Rendering</h3>
+claimJob.php?jobNo=[job number] - The renderer claims the job for rendering - returns the job number if job claimed successfully, or -1 if the job is no longer available for rendering.
+
+<h3>Update Job Status</h3>
+updateJobStatus.php?jobNo=[job number]&statusNo=[status number] - update the status of the job.
+<ol>
+  <li>statusNo = 1 - Waiting</li>
+  <li>statusNo = 2 - Claimed for Rendering</li>
+  <li>statusNo = 3 - Rendering in Progress</li>
+  <li>statusNo = 4 - Rendering Complete</li>
+  <li>statusNo = 5 - Rendering Failed</li>
+</ol>
+
+<h3>Upload Job Results</h3>
+uploadJobResults.php GET or POST data should contain the following:
+<ul>
+  <li>jobNo - job number</li>
+  <li>logFile - the Log file for the rendering job</li>
+  <li>resultFile - the main result file of the rendering</li>
+  <li>thumbnail - a thumbnail image of the result.</li>
+</ul>
+</body>
+</html>
