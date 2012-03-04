@@ -7,54 +7,98 @@
   <link id="favicon" rel="shortcut icon" href="images/beer.ico" />
 </head>
 <body>
-  <div id="map">Map Goes Here</div>
-  <div id="sidebar">
-    <div id="renderer">
-      <label>Map Title:</label>
-      <input id="titleInput" value="Map Title">
-      <br/>
-      <label>Map Type:</label>
-      <SELECT id="rendererSelect">
-	<option selected value="1">townguide</option>
-	<option value="2">mapbook</option>
-      </SELECT><br/>
-      <label>Paper Size:</label>
-      <SELECT id="paperSizeSelect">
-	<option selected value="A4">A4</option>
-	<option value="A3">A3</option>
-	<option value="A2">A2</option>
-	<option value="A1">A1</option>
-	<option value="A0">A0</option>  
-      </SELECT><br/>
-      <label>Map Centre (lon,lat):</label>
-      <input id="mapCenterLon" type="text" size="5" value="lon"/>,
-      <input id="mapCenterLat" type="text" size="5" value="lat"/>
-      <br/>
-      <label>Map Size (w,h) km:</label>
-      <input id="mapSizeW" type="text" size="3" value="5"/>,
-      <input id="mapSizeH" type="text" size="3" value="5"/>
-      <br/>
-    </div>
-    <label>Map Style:</label>
-      <SELECT id="mapStyleSelect">
-	<option selected value="Default OSM">Default OSM</option>
-      </SELECT><br/>
+  <div id="header">
+    <h1>OSM Print Maps</h2>
+  </div> <!--header-->
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Job Editor</a></li>
+      <li><a href="#tabs-2">Output</a></li>
+      <li><a href="#tabs-3">Admin</a></li>
+    </ul>
     
-    <div id="townguide">
-      Townguide Specific Bits
+    <div id='tabs-1'>
+      <div id="map">Map Goes Here</div>
+      <div id="sidebar">
+	<div id="renderer">
+	  <label>Map Title:</label>
+	  <input id="titleInput" value="Map Title">
+	  <br/>
+	  <label>Map Type:</label>
+	  <SELECT id="rendererSelect">
+	    <option selected value="1">townguide</option>
+	    <option value="2">mapbook</option>
+	  </SELECT><br/>
+	  <label>Paper Size:</label>
+	  <SELECT id="paperSizeSelect">
+	    <option selected value="A4">A4</option>
+	    <option value="A3">A3</option>
+	    <option value="A2">A2</option>
+	    <option value="A1">A1</option>
+	    <option value="A0">A0</option>  
+	  </SELECT><br/>
+	  <label>Map Centre (lon,lat):</label>
+	  <input id="mapCenterLon" type="text" size="5" value="lon"/>,
+	  <input id="mapCenterLat" type="text" size="5" value="lat"/>
+	  <br/>
+	  <label>Map Size (w,h) km:</label>
+	  <input id="mapSizeW" type="text" size="3" value="5"/>,
+	  <input id="mapSizeH" type="text" size="3" value="5"/>
+	  <br/>
+	</div>
+
+	<div id='accordion'>
+	  <h3><a href='#'>Map Style Options</a></h3>
+	  <div id='mapstyle'>
+	    <label>Map Style:</label>
+	    <SELECT id="mapStyleSelect">
+	      <option selected value="Default OSM">Default OSM</option>
+	      <option disabled        value="Freemap">Freemap</option>
+	    </SELECT><br/>
+	    <label for="gridCheck">Include Grid?</label>
+	    <input type="checkbox" id="gridCheck" disabled/>
+	    <label for="gridSpacingSelect">Grid Spacing</label>
+	    <select id="gridSpacingSelect">
+	      <option selected value="1">1 km</option>
+	      <option value="10">10 km</option>
+	      <option value="100">100 km</option>
+	    </select>
+	    <br/>
+	    <label for="contourCheck">Include Contour Lines?</label>
+	    <input type="checkbox" id="contourCheck" disabled />
+	    <br/>
+	    <label for="hillshadeCheck">Include Hill Shading?</label>
+	    <input type="checkbox" id="hillshadeCheck" disabled />
+	    
+	  </div>
+	  <h3><a href='#'>Townguide Options</a></h3>
+	  <div id="townguide">
+	    Townguide Specific Bits
+	  </div>
+	  <h3><a href='#'>Mapbook Options</a></h3>	  
+	  <div id="mapbook">
+	    mapbook specific bits.
+	  </div>
+	</div> <!-- accordion -->
+
+	<a href="" id="permaLink">PermaLink</a><br/>
+	<button id="submitButton">Submit Job</button>
+	<button id="listQueueButton">List Job Queue</button>
+
+
+      </div>
+    </div> <!--tabs-1-->
+
+    <div id='tabs-2'>
+      tabs-2
     </div>
 
-    <div id="mapbook">
-      mapbook specific bits.
+    <div id='tabs-3'>
+      tabs-3
     </div>
 
 
-<a href="" id="permaLink">PermaLink</a><br/>
-<button id="submitButton">Submit Job</button>
-<button id="listQueueButton">List Job Queue</button>
-
-
-</div>
+</div> <!--tabs-->
 
 <div id="dialog" title="My Dialog">
   <p>Dialog text goes here</p>
@@ -68,11 +112,13 @@
 
 <script>
   $(function() {
-     $( "#dialog" ).dialog({
-        autoOpen: false,
-        show: "blind",
-        hide: "explode" 
-      });
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      show: "blind",
+      hide: "explode" 
+    });
+    $("#tabs").tabs();
+    $("#accordion").accordion();
   });
 </script>
 </body>
