@@ -78,14 +78,16 @@ function updateOutputListsButtonCallback(data) {
 function submitButtonCallback() {
     var dataObj = {};
     var paperObj = {};
+    var originObj = {};
     var postData = {};
     dataObj.title = jQuery("#titleInput").val();
     dataObj.renderer = jQuery("#rendererSelect").val();
     paperObj.size = jQuery("#paperSizeSelect").val();
     paperObj.orientation = jQuery("#paperOrientationSelect").val();
     dataObj.paper = paperObj;
-    dataObj.mapCenterLon = jQuery("#mapCenterLon").val();
-    dataObj.mapCenterLat = jQuery("#mapCenterLat").val();
+    originObj.lon = jQuery("#mapCenterLon").val();
+    originObj.lat = jQuery("#mapCenterLat").val();
+    dataObj.origin = originObj;
     dataObj.mapSizeW = jQuery("#mapSizeW").val();
     dataObj.mapSizeH = jQuery("#mapSizeH").val();
     dataObj.mapScale = jQuery("#mapScaleSelect").val();
@@ -110,7 +112,7 @@ function submitButtonCallback() {
 
 function submitSuccessCallback(data, textStatus,jqXHR) {
     var html;
-    html = "<p>Job Number = "+data+"</p>";
+    html = "<p>Job Number = <a href='queueApi/getJobInfo?jobNo="+data+"'>"+data+"</p>";
     $("#dialog").dialog('option', 'title', 'Job Submitted Successfully');
     jQuery("#dialog").html(html);
     jQuery("#dialog").css('overflow','auto');

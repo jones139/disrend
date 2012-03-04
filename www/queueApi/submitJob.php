@@ -5,8 +5,8 @@
   $title=$jobObj->title;
   $renderer = $jobObj->renderer;
   $nowStr = gmDate("Y-m-d H:i:s");
-  $lat = $jobObj->mapCenterLat;
-  $lon = $jobObj->mapCenterLon;
+  $lat = $jobObj->origin->lat;
+  $lon = $jobObj->origin->lon;
 
   include("APIConfig.php");
   include("dbconn.php");

@@ -1,11 +1,11 @@
 {
   "server" : "localhost",
-  "apiPrefix" : "printmaps",
+  "apiPrefix" : "printmaps/queueApi",
   "dataDir" : "/usr/local/printmaps/jobData",
   "dbname" : "osm_gb",
   "dbuser" : "graham",
   "dbpass" : "1234",
-  "osmMapnikStyleFile" : "/etc/mapnik-osm-data/osm2.xml",
+  "osmMapnikStyleFile" : "/usr/local/printmaps/mapnik-osm-data/osm2.xml",
   "mapbook":"/home/disk2/OSM/code/mapbook/mapbook.py",
   "world_boundaries":"/home/OSM/data/mapdata/world_boundaries",
   "osm_db":  {

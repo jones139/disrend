@@ -3,6 +3,7 @@ from pyproj import Proj
 from queueMgr import queueMgr
 from dataMgr import dataMgr
 from paperSize import getPaperSize
+from simpleMapRenderer import simpleMapRenderer
 
 class jobProcessor:
     def __init__(self,cfg):
@@ -16,7 +17,8 @@ class jobProcessor:
         print "setupJobDir(%d)\n" % jobNo
         print self.cfg
         self.jobCfg['jobDir'] = "%s/%d" % (self.cfg['dataDir'],jobNo)
-        os.makedirs(self.jobCfg['jobDir'])
+        if not os.path.exists(self.jobCfg['jobDir']):
+            os.makedirs(self.jobCfg['jobDir'])
         configFname = "%s/%s" % (self.jobCfg['jobDir'],'config.json')
         f = open(configFname,'w')
         f.write(json.dumps(self.jobCfg))
@@ -25,6 +27,9 @@ class jobProcessor:
 
     def renderSimpleMap(self,jobNo):
         print "renderSimpleMap"
+        self.jobCfg['outputFname']='simpleMap.png'
+        simpleMapRenderer(self.jobCfg,self.sysCfg)
+        
 
     def renderMapbook(self,jobNo):
         print "renderMapbook"
@@ -73,6 +78,7 @@ class jobProcessor:
             else:
                 print "job Claimed"
                 self.jobCfg = self.qm.getJobConfig(jobNo)
+                self.jobCfg['jobNo'] = jobNo
                 self.setupJobDir(jobNo)
                 self.dm.getOSMData(self.jobCfg)
                 self.dm.getSRTMData(self.jobCfg)
@@ -83,7 +89,7 @@ class jobProcessor:
                 if (self.jobCfg['renderer']=="0"):
                     print "calling simple map renderer"
                     self.renderSimpleMap(jobNo)
-                elifif (self.jobCfg['renderer']=="1"):
+                elif (self.jobCfg['renderer']=="1"):
                     print "calling towngude renderer"
                     self.renderTownguide(jobNo)
                 elif (self.jobCfg['renderer']=="2"):
