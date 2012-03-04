@@ -28,10 +28,10 @@
 	    <br/>
 	    <label>Map Type:</label>
 	    <SELECT id="rendererSelect">
-	      <option selected value="simpleImage">Simple Image</option>
-	      <option value="townguide">townguide</option>
-	      <option value="mapbook">mapbook</option>
-	    </SELECT>
+	      <option selected value="0">Simple Image</option>
+	      <option value="1">townguide</option>
+	      <option value="2">mapbook</option>
+	    </SELECT><br/>
 	    <label>Paper Size:</label>
 	    <SELECT id="paperSizeSelect">
 	      <option selected value="A4">A4</option>
@@ -39,7 +39,12 @@
 	      <option value="A2">A2</option>
 	      <option value="A1">A1</option>
 	      <option value="A0">A0</option>  
-	    </SELECT><br/>
+	    </SELECT>
+	    <select id="paperOrientationSelect">
+	      <option selected value="portrait">Portrait</option>
+	      <option          value="landscape">Landscape</option>
+	    </select>
+	    <br/>
 	    <label>Map Centre (lon,lat):</label>
 	    <input id="mapCenterLon" type="text" size="5" value="lon"/>,
 	    <input id="mapCenterLat" type="text" size="5" value="lat"/>
@@ -48,6 +53,15 @@
 	    <input id="mapSizeW" type="text" size="3" value="5"/>,
 	    <input id="mapSizeH" type="text" size="3" value="5"/>
 	    <br/>
+	    <label>Map Scale:</label>
+	    <select id='mapScaleSelect'>
+	      <option value='10000'>1:10000</option>
+	      <option selected value='25000'>1:25000</option>
+	      <option value='50000'>1:50000</option>
+	      <option value='100000'>1:100000</option>
+	      <option value='250000'>1:250000</option>
+	      <option value='500000'>1:500000</option>
+	    </select>
 	  </div>
 	  
 	  <h3><a href='#'>Map Style Options</a></h3>
@@ -81,20 +95,47 @@
 	  <div id="mapbook">
 	    mapbook specific bits.
 	  </div>
+	  <h3><a href='#'>Advanced Options</a></h3>	  
+	  <div id="advancedOptions">
+	    <label for='outputResolutionSelect'>Output Resolution</label>
+	    <select id="outputResolutionSelect">
+	      <option selected value='100'>100 dpi</option>
+	      <option          value='300'>300 dpi</option>
+	      <option          value='600'>600 dpi</option>
+	    </select>
+	    <br/>
+	    <label for='mapProjectionSelect'>Map Projection</label>
+	    <select id='mapProjectionSelect'>
+	      <option selected value='merc'>Spherical Mercator</option>
+	      <option disabled value='osgb'>GB Ordnance Survey Projection</option>
+	    </select>
+	  </div>
 	</div> <!-- accordion -->
-
+	
 	<a href="" id="permaLink">PermaLink</a><br/>
 	<button id="submitButton">Submit Job</button>
-	<button id="listQueueButton">List Job Queue</button>
-
-
-      </div>
+	
+      </div> <!--sidebar-->
     </div> <!--tabs-1-->
 
     <div id='tabs-2'>
-      tabs-2
+      <button id="updateOutputListsButton">Update Lists</button>
+      <ul>
+	<li><a href="#outputComplete">Completed Jobs</a></li>
+	<li><a href="#outputQueued">Queued Jobs</a></li>
+	<li><a href="#outputFailed">Failed Jobs</a></li>
+      </ul>
+      <div id="outputComplete">
+	<div id="outputCompleteTable"></div>
+      </div>
+      <div id="outputQueued">
+	<div id="outputQueuedTable"></div>
+      </div>
+      <div id="outputFailed">
+	<div id="outputFailedTable"></div>
+      </div>
     </div>
-
+    
     <div id='tabs-3'>
       tabs-3
     </div>
@@ -120,6 +161,7 @@
       hide: "explode" 
     });
     $("#tabs").tabs();
+    $("#tabs-2").tabs();
     $("#accordion").accordion();
   });
 </script>

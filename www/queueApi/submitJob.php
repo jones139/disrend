@@ -24,7 +24,7 @@
 
   $jobNo=mysql_insert_id();
 
-  print $dataDir;
+  #print $dataDir;
   mkdir ($dataDir."/".$jobNo,0777);
   chmod ($dataDir."/".$jobNo,0777);
    

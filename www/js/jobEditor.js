@@ -31,40 +31,71 @@ $(document).ready(function(){
           initialise_jobEditor();
 });
 
-function listQueueButtonCallback(data) {
-    var row;
-    var html;
+function updateOutputListsButtonCallback(data) {
+    var row,status;
+    var html, completeHtml, queuedHtml, failedHtml;
     html = "<table border='1'><tr><th>JobNo</th><th>Status</th><th>Title</th></tr>";
+    completeHtml = html;
+    queuedHtml = html;
+    failedHtml = html;
     for (row in data) {
+	status = data[row]['status'];
+	html = "";
 	html = html + "<tr>";
-	html = html + "<td>"+data[row]['jobNo']+"</td>";
-	html = html + "<td>"+JE.statuses[data[row]['status']]+"</td>";
+	html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+	    +data[row]['jobNo']+"&infoType=1'>"
+	    +data[row]['jobNo']+"</a></td>";
+	html = html + "<td>"+JE.statuses[status]+"</td>";
 	html = html + "<td>"+data[row]['title']+"</td>";
 	html = html + "</tr>";
 	
+	switch (status) {
+	case '1':
+	case '2':
+	case '3':
+	    queuedHtml = queuedHtml + html;
+	    break;
+	case '4':
+	    completeHtml = completeHtml + html;
+	    break;
+	case '5':
+	    failedHtml = failedHtml + html;
+	    break;
+	default:
+	    alert("oh no - status="+status);
+	}
     }
-    html = html+"</table>";
-    $("#dialog").dialog('option', 'title', 'Job Queue');
-    //$("#dialog").html(JSON.stringify(data));
-    jQuery("#dialog").html(html);
-    $( "#dialog" ).dialog( "open" );
+    html = "</table>";
+    completeHtml = completeHtml + html;
+    queuedHtml = queuedHtml + html;
+    failedHtml = failedHtml + html;
+
+    jQuery("#outputCompleteTable").html(completeHtml);
+    jQuery("#outputQueuedTable").html(queuedHtml);
+    jQuery("#outputFailedTable").html(failedHtml);
 }
 
 function submitButtonCallback() {
     var dataObj = {};
+    var paperObj = {};
     var postData = {};
     dataObj.title = jQuery("#titleInput").val();
     dataObj.renderer = jQuery("#rendererSelect").val();
-    dataObj.paperSize = jQuery("#paperSizeSelect").val();
+    paperObj.size = jQuery("#paperSizeSelect").val();
+    paperObj.orientation = jQuery("#paperOrientationSelect").val();
+    dataObj.paper = paperObj;
     dataObj.mapCenterLon = jQuery("#mapCenterLon").val();
     dataObj.mapCenterLat = jQuery("#mapCenterLat").val();
     dataObj.mapSizeW = jQuery("#mapSizeW").val();
     dataObj.mapSizeH = jQuery("#mapSizeH").val();
+    dataObj.mapScale = jQuery("#mapScaleSelect").val();
     dataObj.mapStyle = jQuery("#mapStyleSelect").val();
     dataObj.grid = jQuery('#gridCheck').is(':checked');
     dataObj.gridSpacing = jQuery("#gridSpacingSelect").val();
     dataObj.contours = jQuery('#contourCheck').is(':checked');
     dataObj.hillshade = jQuery('#hillshadeCheck').is(':checked');
+    dataObj.outputDpi = jQuery('#outputResolutionSelect').val();
+    dataObj.projection = jQuery('#mapProjectionSelect').val();
 
     dataJSON = JSON.stringify(dataObj);
 
@@ -209,12 +240,12 @@ function initialise_jobEditor() {
     // Set up the callbacks to update the user interface.
     // Set up the Edit Button
     jQuery('#submitButton').click(submitButtonCallback);
-    jQuery('#listQueueButton').click(
+    jQuery('#updateOutputListsButton').click(
 	function(){
 	    jQuery.ajax({
 		url: "queueApi/getJobList.php",
 		context: document.body,
-		success: listQueueButtonCallback
+		success: updateOutputListsButtonCallback
 	    });
 	}
     );

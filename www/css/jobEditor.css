@@ -3,10 +3,14 @@ body {
     font-family:sans-serif;
 }
 
+h1 {
+    margin:0px;
+}
 #map {
     width:450px;
     height:450px; 
     float:left;
+    border: 1px solid black;
 }
 
 #sidebar {

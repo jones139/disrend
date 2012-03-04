@@ -23,6 +23,9 @@ class jobProcessor:
         f.close()
 
 
+    def renderSimpleMap(self,jobNo):
+        print "renderSimpleMap"
+
     def renderMapbook(self,jobNo):
         print "renderMapbook"
         p1 = Proj(init='epsg:4326') # lat-lon
@@ -77,7 +80,10 @@ class jobProcessor:
                 self.dm.getMapnikStyleFile(self.jobCfg)
                 print self.jobCfg['mapnikStyleFile']
 
-                if (self.jobCfg['renderer']=="1"):
+                if (self.jobCfg['renderer']=="0"):
+                    print "calling simple map renderer"
+                    self.renderSimpleMap(jobNo)
+                elifif (self.jobCfg['renderer']=="1"):
                     print "calling towngude renderer"
                     self.renderTownguide(jobNo)
                 elif (self.jobCfg['renderer']=="2"):
