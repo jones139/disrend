@@ -1,4 +1,5 @@
 import mapnik2 as mapnik
+import cairo
 from paperSize import getPaperSize
 from getProjStr import getProjStr
 
@@ -63,10 +64,13 @@ def simpleMapRenderer(jobCfg,sysCfg):
     mapnik.load_map(m,styleFname)
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)
     m.zoom_to_box(bbox)
-    im = mapnik.Image(imgx,imgy)
-    mapnik.render(m, im,mapnik_scale_factor)
-    view = im.view(0,0,imgx,imgy) # x,y,width,height
-    view.save(outputFname,'png')
+    #im = mapnik.Image(imgx,imgy)
+    im = cairo.PDFSurface(outputFname,imgx,imgy)
+    #mapnik.render(m, im,mapnik_scale_factor)
+    mapnik.render(m, im)
+    #view = im.view(0,0,imgx,imgy) # x,y,width,height
+    #view.save(outputFname,'png')
+    im.finish()
 
     print "done - image stored as %s" % outputFname
 

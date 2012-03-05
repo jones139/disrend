@@ -29,6 +29,12 @@ class queueMgr:
         self.FILE_LOG = 2
         self.FILE_OUTPUT = 3
         self.FILE_THUMB = 4
+
+        self.STATUS_WAITING = 1
+        self.STATUS_CLAIMED = 2
+        self.STATUS_RENDERING = 3
+        self.STATUS_COMPLETE = 4
+        self.STATUS_FAILED = 5
     
 
     def getNextJobNo(self):
@@ -85,6 +91,25 @@ class queueMgr:
             return False
         else:
             return True
+
+    def setJobStatus(self,jobNo,statusNo):
+        """
+        Set the status of Job Number jobNo to status value statusNo.
+        """
+        self.conn.request("GET", 
+                          "/%s/updateJobStatus.php?jobNo=%s&statusNo=%s" % 
+                          (self.apiPrefix,jobNo,statusNo)
+                          )
+        response = self.conn.getresponse()
+        #print response.status, response.reason
+        data = response.read()
+        if (int(data) != jobNo):
+            print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
+                (data,jobNo)
+            return False
+        else:
+            return True
+
 
     def uploadFile(self,jobNo,fname,ftype):
         """uploads the file 'fname' to the server, telling the server

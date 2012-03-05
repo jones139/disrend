@@ -42,7 +42,12 @@
   	case "3":
 	     $fname =$dataDir.'/'.$jobNo.'/resultFile.pdf';
 	     if (file_exists($fname)) {
-	       readfile($fname);
+                header("Cache-Control: public");
+                header("Content-Description: File Transfer");
+                header("Content-Disposition: attachment; filename=resultFile.pdf");
+                header("Content-Type: application/zip");
+    		header("Content-Transfer-Encoding: binary");
+	        readfile($fname);
 	     } else {
 	       print "ERROR - FILE ".$fname." DOES NOT EXIST";
 	     }

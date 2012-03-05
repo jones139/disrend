@@ -27,7 +27,7 @@ class jobProcessor:
 
     def renderSimpleMap(self,jobNo):
         print "renderSimpleMap"
-        self.jobCfg['outputFname']='simpleMap.png'
+        self.jobCfg['outputFname']='output.pdf'
         simpleMapRenderer(self.jobCfg,self.sysCfg)
         
 
@@ -80,6 +80,7 @@ class jobProcessor:
                 self.jobCfg = self.qm.getJobConfig(jobNo)
                 self.jobCfg['jobNo'] = jobNo
                 self.setupJobDir(jobNo)
+                self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
                 self.dm.getOSMData(self.jobCfg)
                 self.dm.getSRTMData(self.jobCfg)
                 self.dm.getGridData(self.jobCfg)
@@ -96,6 +97,14 @@ class jobProcessor:
                     print "calling mapbook renderer"
                     self.renderMapbook(jobNo)
 
+                outputFname = str("%s/%s" % \
+                                      (self.jobCfg['jobDir'],
+                                       self.jobCfg['outputFname']))
+                self.qm.uploadFile(jobNo,
+                                   outputFname,
+                                   self.qm.FILE_OUTPUT)
+
+                self.qm.setJobStatus(jobNo,self.qm.STATUS_COMPLETE)
                 
 
 
