@@ -2,7 +2,7 @@
   $jobNo       = $_REQUEST['jobNo'] ;
   $statusNo    = $_REQUEST['statusNo'];
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $nowStr = gmDate("Y-m-d H:i:s");
