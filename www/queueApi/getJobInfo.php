@@ -55,6 +55,7 @@
   	case "4":
 	     $fname =$dataDir.'/'.$jobNo.'/thumbnail.png';
 	     if (file_exists($fname)) {
+	       header("Content-Type: image/png");
 	       readfile($fname);
 	     } else {
 	       print "ERROR - FILE ".$fname." DOES NOT EXIST";

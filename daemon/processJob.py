@@ -104,6 +104,20 @@ class jobProcessor:
                                    outputFname,
                                    self.qm.FILE_OUTPUT)
 
+
+                thumbnailFname = str("%s/%s" % \
+                                      (self.jobCfg['jobDir'],
+                                       "thumbnail.png"))
+                convertStr = "convert -scale 100 %s %s" % (outputFname,
+                                                           thumbnailFname)
+                print "Creating thumbnail using: %s" % convertStr
+                os.system(convertStr)
+                
+                self.qm.uploadFile(jobNo,
+                                   thumbnailFname,
+                                   self.qm.FILE_THUMB)
+
+
                 self.qm.setJobStatus(jobNo,self.qm.STATUS_COMPLETE)
                 
 

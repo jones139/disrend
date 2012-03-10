@@ -40,25 +40,49 @@ function updateOutputListsButtonCallback(data) {
     failedHtml = html;
     for (row in data) {
 	status = data[row]['status'];
-	html = "";
-	html = html + "<tr>";
-	html = html + "<td><a href='queueApi/getJobInfo?jobNo="
-	    +data[row]['jobNo']+"&infoType=1'>"
-	    +data[row]['jobNo']+"</a></td>";
-	html = html + "<td>"+JE.statuses[status]+"</td>";
-	html = html + "<td>"+data[row]['title']+"</td>";
-	html = html + "</tr>";
-	
+ 	
 	switch (status) {
 	case '1':
 	case '2':
 	case '3':
+ 	    html = "";
+	    html = html + "<tr>";
+	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=1'>"
+		+data[row]['jobNo']+"</a></td>";
+	    html = html + "<td>"+JE.statuses[status]+"</td>";
+	    html = html + "<td>"+data[row]['title']+"</td>";
+	    html = html + "</tr>";
+
 	    queuedHtml = queuedHtml + html;
 	    break;
 	case '4':
+	    html = "";
+	    html = html + "<tr>";
+ 	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=1'>"
+		+data[row]['jobNo']+"</a></td>";
+	    html = html + "<td>"+JE.statuses[status]+"</td>";
+	    html = html + "<td>"+data[row]['title']+"</td>";
+	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=3'>"
+		+"<img src='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=4'>"+"</a></td>";
+	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=2'>"
+		+"Log File"+"</a></td>";
+	    html = html + "</tr>";
 	    completeHtml = completeHtml + html;
 	    break;
 	case '5':
+	    html = "";
+	    html = html + "<tr>";
+	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+		+data[row]['jobNo']+"&infoType=1'>"
+		+data[row]['jobNo']+"</a></td>";
+	    html = html + "<td>"+JE.statuses[status]+"</td>";
+	    html = html + "<td>"+data[row]['title']+"</td>";
+	    html = html + "</tr>";
 	    failedHtml = failedHtml + html;
 	    break;
 	default:
