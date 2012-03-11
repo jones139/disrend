@@ -81,6 +81,7 @@ class jobProcessor:
                 self.jobCfg['jobNo'] = jobNo
                 self.setupJobDir(jobNo)
                 self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
+                self.dm.setBbox(self.jobCfg)
                 self.dm.getOSMData(self.jobCfg)
                 self.dm.getSRTMData(self.jobCfg)
                 self.dm.getGridData(self.jobCfg)

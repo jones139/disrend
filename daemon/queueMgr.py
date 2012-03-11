@@ -21,9 +21,9 @@ class queueMgr:
         files (e.g. "printmaps" if the server API address is
         maps.webhop.net/printmaps
         """
-        self.conn = httplib.HTTPConnection(serverURL)
         self.serverURL = serverURL
         self.apiPrefix = apiPrefix
+        #self.conn = httplib.HTTPConnection(serverURL)
 
         self.FILE_CONFIG = 1
         self.FILE_LOG = 2
@@ -60,10 +60,14 @@ class queueMgr:
         Returns an integer which is the job number of the next job
         to be processed in the queue, or zero if there is an error.
         """
+        print "getNextJobNo - serverURL=%s." % (self.serverURL)
+        self.conn = httplib.HTTPConnection(self.serverURL)
         self.conn.request("GET", "/%s/getNextJob.php" % (self.apiPrefix))
         response = self.conn.getresponse()
-        #print response.status, response.reason
+        print response.status, response.reason
         data = response.read()
+        self.conn.close()
+        print "getNextJobNo - data=%s." % (data)
         if self.isInt(data):
             return int(data)
         else:
@@ -78,6 +82,7 @@ class queueMgr:
         qm.FILE_OUTPUT - the main output of the data processor (pdf file)
         qm.FILE_THUMB - the thumbnail image of the output.
         """
+        self.conn = httplib.HTTPConnection(self.serverURL)
         self.conn.request("GET", 
                           "/%s/getJobInfo.php?jobNo=%s&infoType=%s" % 
                           (self.apiPrefix,jobNo,infoType)
@@ -85,6 +90,7 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
+        self.conn.close()
         return (data)
 
     def getJobConfig(self,jobNo):
@@ -99,6 +105,7 @@ class queueMgr:
         """
         Tells the server that we are claiming this job for processing.
         """
+        self.conn = httplib.HTTPConnection(self.serverURL)
         self.conn.request("GET", 
                           "/%s/claimJob.php?jobNo=%s" % 
                           (self.apiPrefix,jobNo)
@@ -106,6 +113,7 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
+        self.conn.close()
         if (self.isInt(data)):
             if (int(data) != jobNo):
                 print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
@@ -123,6 +131,7 @@ class queueMgr:
         """
         Set the status of Job Number jobNo to status value statusNo.
         """
+        self.conn = httplib.HTTPConnection(self.serverURL)
         self.conn.request("GET", 
                           "/%s/updateJobStatus.php?jobNo=%s&statusNo=%s" % 
                           (self.apiPrefix,jobNo,statusNo)
@@ -130,6 +139,7 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
+        self.conn.close()
         if (self.isInt(data)):
             if (int(data) != jobNo):
                 print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
@@ -156,6 +166,7 @@ class queueMgr:
         params = urllib.urlencode({'jobNo': jobNo, 'fileData': fileData, 'fileType': ftype})
         headers = {"Content-type": "application/x-www-form-urlencoded",
                    "Accept": "text/plain"}
+        self.conn = httplib.HTTPConnection(self.serverURL)
         self.conn.request("POST", 
                           "/%s/uploadFile.php" % 
                           (self.apiPrefix),
@@ -164,6 +175,7 @@ class queueMgr:
                           )
         response = self.conn.getresponse()
         data = response.read()
+        self.conn.close()
         print data
 
     def quitQueueMgr(self):

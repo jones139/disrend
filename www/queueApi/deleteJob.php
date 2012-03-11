@@ -1,7 +1,7 @@
 <?php
   $jobNo       = $_REQUEST['jobNo'] ;
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $query  = "delete from queue where jobNo =".$jobNo;

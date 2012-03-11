@@ -36,25 +36,21 @@ def simpleMapRenderer(jobCfg,sysCfg):
     # Calculate map Bounding Box (in degrees and metres) #
     ######################################################
     prj = mapnik.Projection(projStr)
-    # Convert origin (bottom left corner) to metres as c0
+    # Convert origin (centre) to metres as c_origin
     c_origin = prj.forward(mapnik.Coord(lon,lat))
     # calculate top right in metres given image size and map scale.
     mapw = scale*imgw/100.  # width of map representation in metres.
     maph = scale*imgw/100.  # height of map representation in metres.
+    # c0 = bottom left corner position in metres.
     c0 = mapnik.Coord(c_origin.x - mapw/2.0,
                       c_origin.y - maph/2.0)
+    # c1 = top right corner position in metres.
     c1 = mapnik.Coord(c_origin.x + mapw/2.0,
                       c_origin.y + maph/2.0)
     print c0,c1
 
-    c1_ll = prj.inverse(c1)
-    ll = (lon,lat,c1_ll.x,c1_ll.y)
-    print "bbox="+str(ll)
-
-    c0 = prj.forward(mapnik.Coord(ll[0],ll[1]))
-    c1 = prj.forward(mapnik.Coord(ll[2],ll[3]))
-    print c0,c1
-
+    # Calculate the image size based on the required physical width and
+    # height, and the requested resolution (img_dpi).
     mapnik_scale_factor = img_dpi / 90.7
     imgx = int(imgw * img_dpi / 2.54)
     imgy = int(imgh * img_dpi / 2.54)
@@ -64,12 +60,8 @@ def simpleMapRenderer(jobCfg,sysCfg):
     mapnik.load_map(m,styleFname)
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)
     m.zoom_to_box(bbox)
-    #im = mapnik.Image(imgx,imgy)
     im = cairo.PDFSurface(outputFname,imgx,imgy)
-    #mapnik.render(m, im,mapnik_scale_factor)
     mapnik.render(m, im)
-    #view = im.view(0,0,imgx,imgy) # x,y,width,height
-    #view.save(outputFname,'png')
     im.finish()
 
     print "done - image stored as %s" % outputFname

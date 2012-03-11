@@ -10,3 +10,5 @@ grid.shx
 grid.dbf
 osm_carto.xml
 renderQueue.log
+srtm_tmp
+srtm_cache

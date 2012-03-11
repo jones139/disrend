@@ -1,5 +1,5 @@
 <?php
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $jobNo       = $_REQUEST['jobNo'] ;

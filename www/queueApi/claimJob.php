@@ -1,7 +1,7 @@
 <?php
   $jobNo       = $_REQUEST['jobNo'] ;
 
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $nowStr = gmDate("Y-m-d H:i:s");
