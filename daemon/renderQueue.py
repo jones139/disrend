@@ -78,11 +78,11 @@ class renderQueue:
         print "queueLoop"
         self.jp = jobProcessor(self.cfgObj)
         while(1):
-            try:
-                self.jp.processJob()
-            except Error, e:
-                print "oh no - error!!!!"
-            time.sleep(1)
+            #try:
+            self.jp.processJob()
+            #except:
+            #print "oh no -  error:", sys.exc_info()[0]
+            time.sleep(5)
 
 
 if __name__ == "__main__":

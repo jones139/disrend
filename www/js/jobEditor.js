@@ -47,7 +47,7 @@ function updateOutputListsButtonCallback(data) {
 	case '3':
  	    html = "";
 	    html = html + "<tr>";
-	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=1'>"
 		+data[row]['jobNo']+"</a></td>";
 	    html = html + "<td>"+JE.statuses[status]+"</td>";
@@ -59,16 +59,16 @@ function updateOutputListsButtonCallback(data) {
 	case '4':
 	    html = "";
 	    html = html + "<tr>";
- 	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+ 	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=1'>"
 		+data[row]['jobNo']+"</a></td>";
 	    html = html + "<td>"+JE.statuses[status]+"</td>";
 	    html = html + "<td>"+data[row]['title']+"</td>";
-	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=3'>"
-		+"<img src='queueApi/getJobInfo?jobNo="
+		+"<img src='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=4'>"+"</a></td>";
-	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=2'>"
 		+"Log File"+"</a></td>";
 	    html = html + "</tr>";
@@ -77,7 +77,7 @@ function updateOutputListsButtonCallback(data) {
 	case '5':
 	    html = "";
 	    html = html + "<tr>";
-	    html = html + "<td><a href='queueApi/getJobInfo?jobNo="
+	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=1'>"
 		+data[row]['jobNo']+"</a></td>";
 	    html = html + "<td>"+JE.statuses[status]+"</td>";
@@ -136,7 +136,7 @@ function submitButtonCallback() {
 
 function submitSuccessCallback(data, textStatus,jqXHR) {
     var html;
-    html = "<p>Job Number = <a href='queueApi/getJobInfo?jobNo="+data+"'>"+data+"</p>";
+    html = "<p>Job Number = <a href='queueApi/getJobInfo.php?jobNo="+data+"'>"+data+"</p>";
     $("#dialog").dialog('option', 'title', 'Job Submitted Successfully');
     jQuery("#dialog").html(html);
     jQuery("#dialog").css('overflow','auto');
@@ -275,6 +275,17 @@ function initialise_jobEditor() {
 	    });
 	}
     );
+    // update the jobs list if the 'output' tab is selected.
+    jQuery('#tabs').tabs({
+	select: function(event, ui) {
+	    jQuery.ajax({
+		url: "queueApi/getJobList.php",
+		context: document.body,
+		success: updateOutputListsButtonCallback
+	    });
+            return true;
+	}
+    });
     jQuery('#mapCenterLon').change(setMapCenter);
     jQuery('#mapCenterLat').change(setMapCenter);
     JE.map.on('dragend',updateMapCenterTextBoxes);

@@ -35,7 +35,25 @@ class queueMgr:
         self.STATUS_RENDERING = 3
         self.STATUS_COMPLETE = 4
         self.STATUS_FAILED = 5
-    
+ 
+    def isNumber(self,s):
+        """ Returns true if string s parses as a float, or else returns false.
+        """
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+
+    def isInt(self,s):
+        """
+        returns true if string s parses as an integer, or else returns false.
+        """
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
 
     def getNextJobNo(self):
         """
@@ -46,7 +64,10 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
-        return int(data)
+        if self.isInt(data):
+            return int(data)
+        else:
+            return -1
 
     def getJobInfo(self,jobNo,infoType):
         """
@@ -85,12 +106,18 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
-        if (int(data) != jobNo):
+        if (self.isInt(data)):
+            if (int(data) != jobNo):
+                print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
+                    (data,jobNo)
+                return False
+            else:
+                return True
+        else:
             print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
                 (data,jobNo)
             return False
-        else:
-            return True
+            
 
     def setJobStatus(self,jobNo,statusNo):
         """
@@ -103,13 +130,17 @@ class queueMgr:
         response = self.conn.getresponse()
         #print response.status, response.reason
         data = response.read()
-        if (int(data) != jobNo):
+        if (self.isInt(data)):
+            if (int(data) != jobNo):
+                print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
+                    (data,jobNo)
+                return False
+            else:
+                return True
+        else:
             print "oh no - data=%s, jobNo=%s - something has gone wrong!\n" %\
                 (data,jobNo)
             return False
-        else:
-            return True
-
 
     def uploadFile(self,jobNo,fname,ftype):
         """uploads the file 'fname' to the server, telling the server

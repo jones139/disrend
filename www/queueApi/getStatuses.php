@@ -1,6 +1,6 @@
 <?php
   header('Content-type: application/json');
-  include("APIconfig.php");
+  include("APIConfig.php");
   include("dbconn.php");
 
   $query = "select statusNo,title from statuses";
