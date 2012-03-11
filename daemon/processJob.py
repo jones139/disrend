@@ -83,7 +83,10 @@ class jobProcessor:
                 self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
                 self.dm.setBbox(self.jobCfg)
                 self.dm.getOSMData(self.jobCfg)
-                self.dm.getSRTMData(self.jobCfg)
+
+                if (self.jobCfg['contours'] or 
+                    self.jobCfg['hillshade']):
+                    self.dm.getSRTMData(self.jobCfg)
                 self.dm.getGridData(self.jobCfg)
                 self.dm.getMapnikStyleFile(self.jobCfg)
                 print self.jobCfg['mapnikStyleFile']
