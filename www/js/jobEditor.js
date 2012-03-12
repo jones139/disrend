@@ -31,13 +31,22 @@ $(document).ready(function(){
           initialise_jobEditor();
 });
 
-function updateOutputListsButtonCallback(data) {
+function updateOutputListsButtonCallback() {
+    jQuery.ajax({
+	url: "queueApi/getJobList.php",
+	context: document.body,
+	success: updateOutputListsSuccessCallback
+    });
+}
+
+function updateOutputListsSuccessCallback(data) {
     var row,status;
     var html, completeHtml, queuedHtml, failedHtml;
     html = "<table border='1'><tr><th>JobNo</th><th>Status</th><th>Title</th></tr>";
     completeHtml = html;
     queuedHtml = html;
     failedHtml = html;
+    adminHtml = html;
     for (row in data) {
 	status = data[row]['status'];
  	
@@ -75,7 +84,7 @@ function updateOutputListsButtonCallback(data) {
 	    completeHtml = completeHtml + html;
 	    break;
 	case '5':
-	    html = "";
+ 	    html = "";
 	    html = html + "<tr>";
 	    html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
 		+data[row]['jobNo']+"&infoType=1'>"
@@ -88,16 +97,51 @@ function updateOutputListsButtonCallback(data) {
 	default:
 	    alert("oh no - status="+status);
 	}
+	html = "";
+	html = html + "<tr>";
+	html = html + "<td><a href='queueApi/getJobInfo.php?jobNo="
+	    +data[row]['jobNo']+"&infoType=1'>"
+	    +data[row]['jobNo']+"</a></td>";
+	html = html + "<td>"+JE.statuses[status]+"</td>";
+	html = html + "<td>"+data[row]['title']+"</td>";
+ 	html = html + "<td><button class='deleteButton' value="+
+	    data[row]['jobNo']+">Delete</button>";
+	html = html + "<td><button class='retryButton' value="+
+	    data[row]['jobNo']+">Retry</button></td>";
+	html = html + "</tr>";
+	adminHtml = adminHtml + html;
     }
     html = "</table>";
     completeHtml = completeHtml + html;
     queuedHtml = queuedHtml + html;
     failedHtml = failedHtml + html;
+    adminHtml = adminHtml + html;
 
     jQuery("#outputCompleteTable").html(completeHtml);
     jQuery("#outputQueuedTable").html(queuedHtml);
     jQuery("#outputFailedTable").html(failedHtml);
+    jQuery("#tabs-3").html(adminHtml);
 }
+
+function deleteButtonCallback(e) {
+    var jobNo;
+    jobNo = $(e.target).val();
+    jQuery.get("queueApi/deleteJob.php?jobNo="+jobNo,function() { 
+	alert("deleted");
+	updateOutputListsButtonCallback();
+    });
+}
+
+
+function retryButtonCallback(e) {
+    var jobNo;
+    jobNo = $(e.target).val();
+    jQuery.get("queueApi/retryJob.php?jobNo="+jobNo,function() { 
+	alert("re-queueued");
+	updateOutputListsButtonCallback();
+    });
+}
+
 
 function submitButtonCallback() {
     var dataObj = {};
@@ -266,25 +310,14 @@ function initialise_jobEditor() {
     // Set up the callbacks to update the user interface.
     // Set up the Edit Button
     jQuery('#submitButton').click(submitButtonCallback);
+    jQuery('.deleteButton').live("click",deleteButtonCallback);
+    jQuery('.retryButton').live("click",retryButtonCallback);
     jQuery('#updateOutputListsButton').click(
-	function(){
-	    jQuery.ajax({
-		url: "queueApi/getJobList.php",
-		context: document.body,
-		success: updateOutputListsButtonCallback
-	    });
-	}
+	updateOutputListsButtonCallback
     );
     // update the jobs list if the 'output' tab is selected.
     jQuery('#tabs').tabs({
-	select: function(event, ui) {
-	    jQuery.ajax({
-		url: "queueApi/getJobList.php",
-		context: document.body,
-		success: updateOutputListsButtonCallback
-	    });
-            return true;
-	}
+	select: updateOutputListsButtonCallback
     });
     jQuery('#mapCenterLon').change(setMapCenter);
     jQuery('#mapCenterLat').change(setMapCenter);
