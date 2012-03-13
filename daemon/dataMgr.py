@@ -41,7 +41,7 @@ class dataMgr:
         c_origin = prj.forward(mapnik.Coord(lon,lat))
         # calculate top right in metres given image size and map scale.
         mapw = scale*imgw/100.  # width of map representation in metres.
-        maph = scale*imgw/100.  # height of map representation in metres.
+        maph = scale*imgh/100.  # height of map representation in metres.
         # c0 = bottom left corner position in metres.
         c0 = mapnik.Coord(c_origin.x - mapw/2.0,
                           c_origin.y - maph/2.0)
