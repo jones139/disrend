@@ -2,6 +2,7 @@
   "server" : "maps3.org.uk",
   "apiPrefix" : "printmaps/queueApi",
   "dataDir" : "/usr/local/printmaps/jobData",
+  "srtmDir" : "/usr/local/printmaps/srtm_cache",
   "dbname" : "osm_gb",
   "dbuser" : "graham",
   "dbpass" : "1234",

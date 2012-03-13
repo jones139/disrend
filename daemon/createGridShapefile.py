@@ -3,19 +3,26 @@
 import math
 from osgeo import ogr
 from osgeo import osr
+import os
 
 import mapnik2 as mapnik
 ###########################################################################
-def createGridShapefile(ll,gridSize = 1000):
+def createGridShapefile(jobCfg):
     ''' creates a shapefile of a grid of size girdSize metres covering
     the bounding box ll.
     '''
     print "createGridShapefile"
 
-    origin_lon = -3
-    origin_lat = 54
-    gridXRange = 5000   # number of grid squares in x direction
-    gridYRange = 5000   # number of grid squares in y direction
+    ll = jobCfg['ll']                     # lat,lon bounding box.
+    origWd = os.getcwd()
+    os.chdir(jobCfg['jobDir'])
+
+    try:
+        gridSize = float(jobCfg['gridSpacing'])*1000.   # grid spacing in metres.
+    except:
+        print "****ERROR gridSize %s not recognised - using default ****" %\
+            (jobCfg['gridSpacing'])
+        gridSize = 1000.
 
     try:
         spherical_merc = mapnik.Projection('+init=epsg:900913')
@@ -48,6 +55,7 @@ def createGridShapefile(ll,gridSize = 1000):
     sref.ImportFromEPSG(900913)
     filename = 'grid.shp'
     driver = ogr.GetDriverByName('ESRI Shapefile')
+    print "filename=%s\n" % filename
     driver.DeleteDataSource(filename)
     ds = driver.CreateDataSource(filename)
     layer = ds.CreateLayer('grid', geom_type=ogr.wkbLineString)
@@ -95,6 +103,7 @@ def createGridShapefile(ll,gridSize = 1000):
         f.Destroy()
 
     ds.Destroy()
+    os.chdir(origWd)
 
 
 if __name__ == "__main__":

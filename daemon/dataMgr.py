@@ -3,6 +3,7 @@ dataMgr - manages map data ready for rendering using mapnik.
 """
 
 import srtm
+import createGridShapefile
 import os
 import paperSize
 import getProjStr
@@ -59,18 +60,23 @@ class dataMgr:
     def getOSMData(self,jobCfg):
         print "getOSMData"
 
-    def getSRTMData(self,jobCfg):
+    def getSRTMData(self,sysCfg,jobCfg):
         """ Downloads SRTM data, converts it to contours, and uploads
         it into a postgresql database.
         26sep2011 GJ  ORIGINAL VERSION
         """
         print "getSRTMData"
+        print jobCfg
+        origWd = os.getcwd()
         self.setBbox(jobCfg)
-        srtmTmpDir = "srtm_tmp"
+        srtmTmpDirName = "srtm_tmp"
         mergeHgt = "srtm.hgt"
         mergeTif = "srtm.tiff"
         contoursShp = "contours.shp"
         hillshadeTif = "hillshade.tiff"
+
+        jobDir = jobCfg['jobDir']
+        srtmTmpDir = "%s" % (jobDir)
 
         # First clean out the temporary directory
         if os.path.isdir(srtmTmpDir):
@@ -82,8 +88,7 @@ class dataMgr:
             os.rmdir(srtmTmpDir)
 
 
-        print "downloadSRTMData()"
-        downloader = srtm.SRTMDownloader()
+        downloader = srtm.SRTMDownloader(cachedir=sysCfg['srtmDir'])
         downloader.loadFileList()
         ll = jobCfg['ll']
         print "ll=",ll
@@ -91,12 +96,12 @@ class dataMgr:
         print tileSet
 
         os.makedirs(srtmTmpDir)
-        origWd = os.getcwd()
         os.chdir(srtmTmpDir)
         for tileFname in tileSet:
             fnameParts = tileFname.split("/")
             fname = fnameParts[-1]
-            os.symlink("../%s" % (tileFname),
+            print tileFname,fname
+            os.symlink("%s" % (tileFname),
                        "%s" % (fname))
             os.system("unzip %s" % (fname))
             os.remove(fname)
@@ -125,7 +130,7 @@ class dataMgr:
 
     def getGridData(self,jobCfg):
         print "getGridData"
-
+        createGridShapefile.createGridShapefile(jobCfg)
 
     def getMapnikStyleFile(self,jobCfg):
         print "getMapnikStyleFile"

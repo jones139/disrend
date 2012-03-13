@@ -86,8 +86,9 @@ class jobProcessor:
 
                 if (self.jobCfg['contours'] or 
                     self.jobCfg['hillshade']):
-                    self.dm.getSRTMData(self.jobCfg)
-                self.dm.getGridData(self.jobCfg)
+                    self.dm.getSRTMData(self.sysCfg,self.jobCfg)
+                if (self.jobCfg['grid']):
+                    self.dm.getGridData(self.jobCfg)
                 self.dm.getMapnikStyleFile(self.jobCfg)
                 print self.jobCfg['mapnikStyleFile']
 

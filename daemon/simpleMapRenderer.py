@@ -58,6 +58,9 @@ def simpleMapRenderer(jobCfg,sysCfg):
     print "generating map...."
     m = mapnik.Map(imgx,imgy)
     mapnik.load_map(m,styleFname)
+
+
+
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)
     m.zoom_to_box(bbox)
     im = cairo.PDFSurface(outputFname,imgx,imgy)
