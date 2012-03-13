@@ -79,13 +79,13 @@ class dataMgr:
         srtmTmpDir = "%s" % (jobDir)
 
         # First clean out the temporary directory
-        if os.path.isdir(srtmTmpDir):
-            oldFileList = os.listdir(srtmTmpDir)
-            for fname in oldFileList:
-                print "removing %s/%s" % (srtmTmpDir,fname)
-                os.remove("%s/%s" % (srtmTmpDir,fname))
-            print "removing directory ",srtmTmpDir
-            os.rmdir(srtmTmpDir)
+        #if os.path.isdir(srtmTmpDir):
+        #    oldFileList = os.listdir(srtmTmpDir)
+        #    for fname in oldFileList:
+        #        print "removing %s/%s" % (srtmTmpDir,fname)
+        #        os.remove("%s/%s" % (srtmTmpDir,fname))
+        #    print "removing directory ",srtmTmpDir
+        #    os.rmdir(srtmTmpDir)
 
 
         downloader = srtm.SRTMDownloader(cachedir=sysCfg['srtmDir'])

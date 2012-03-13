@@ -60,6 +60,54 @@ def simpleMapRenderer(jobCfg,sysCfg):
     m = mapnik.Map(imgx,imgy)
     mapnik.load_map(m,styleFname)
 
+    if (jobCfg['hillshade']):
+        style = mapnik.Style()
+        rule = mapnik.Rule()
+        rs = mapnik.RasterSymbolizer()
+        rs.opacity=0.5
+        rule.symbols.append(rs)
+        style.rules.append(rule)
+        m.append_style('hillshade',style)
+        lyr = mapnik.Layer('hillshade')
+        lyr.srs="+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m"
+        hillshadeFile="%s/%s" % (jobCfg['jobDir'],'hillshade.tiff')
+        print "hillshadeFile=%s" % hillshadeFile
+        lyr.datasource = mapnik.Gdal(base=jobCfg['jobDir'],file=hillshadeFile.encode('utf-8'))
+        lyr.styles.append('hillshade')
+        m.layers.append(lyr)
+
+    if (jobCfg['contours']):
+        style = mapnik.Style()
+        rule = mapnik.Rule()
+        contourlines = mapnik.LineSymbolizer(mapnik.Color('green'),0.5)
+        rule.symbols.append(contourlines)
+        style.rules.append(rule)
+        m.append_style('contours',style)
+        contourFile="%s/%s" % (jobCfg['jobDir'],'contours.shp')
+        print "contourFile=%s\n" % contourFile
+        lyr = mapnik.Layer('contours')
+        lyr.datasource = mapnik.Shapefile(file=contourFile.encode('utf-8'))
+        lyr.styles.append('contours')
+        m.layers.append(lyr)
+
+
+    if (jobCfg['grid']):
+        style = mapnik.Style()
+        rule = mapnik.Rule()
+        gridlines = mapnik.LineSymbolizer(mapnik.Color('black'),0.5)
+        rule.symbols.append(gridlines)
+        style.rules.append(rule)
+        m.append_style('grid',style)
+        gridFile="%s/%s" % (jobCfg['jobDir'],'grid.shp')
+        print "gridFile=%s\n" % gridFile
+        lyr = mapnik.Layer('grid')
+        lyr.srs = "+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m"
+        lyr.datasource = mapnik.Shapefile(file=gridFile.encode('utf-8'))
+        lyr.styles.append('grid')
+        m.layers.append(lyr)
+        
+    for lyr in m.layers:
+        print lyr.name
 
 
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)
