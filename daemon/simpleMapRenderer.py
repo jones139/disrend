@@ -51,9 +51,10 @@ def simpleMapRenderer(jobCfg,sysCfg):
 
     # Calculate the image size based on the required physical width and
     # height, and the requested resolution (img_dpi).
-    mapnik_scale_factor = img_dpi / 90.7
-    imgx = int(imgw * img_dpi / 2.54)
-    imgy = int(imgh * img_dpi / 2.54)
+    #mapnik_scale_factor = img_dpi / 90.7
+    mapnik_scale_factor = 1.0
+    imgx = int(imgw * 72 / 2.54) # size in points (72nds of an inch).
+    imgy = int(imgh * 72 / 2.54) # ~
 
     print "generating map...."
     m = mapnik.Map(imgx,imgy)
