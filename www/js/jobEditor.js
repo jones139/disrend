@@ -20,8 +20,8 @@
 // Define Global Variables
 var JE = {};
 
-JE.lat = 54.505;                  // Initial latitude of centre of map.
-JE.lon = -2.0;                    // Initial longitude of centre of map.
+JE.lat = 54.5457;                  // Initial latitude of centre of map.
+JE.lon = -1.9253;                    // Initial longitude of centre of map.
 JE.zoom = 10;                      // Initial zoom level.
 JE.jobNo = -1;                    // Job number to use to configure default
 //                                    user interface state.
@@ -202,6 +202,11 @@ function drawMapCenterMarker() {
     var mapScale;
     var mapCenter;
     var tmp;
+    var minLon,maxLon;
+    var minLat,maxLat;
+    var minX,maxX,minY,maxY;
+    var ll, llArr;
+
     paperSizeStr = jQuery("#paperSizeSelect").val();
     paperOrientationStr = jQuery("#paperOrientationSelect").val();
     mapScale = jQuery("#mapScaleSelect").val();
@@ -211,9 +216,53 @@ function drawMapCenterMarker() {
 	paperSize[1]=paperSize[0];
 	paperSize[0]=tmp;
     }
-    //alert("paperSize=("+paperSize[0]+","+paperSize[1]+"), "+paperOrientationStr);
-    mapCenter = JE.map.latLngToLayerPoint(JE.map.getCenter());
-    //alert("mapCenter="+mapCenter);
+    // Calculate the size of area covered by map, in metres.
+    mapSizeX = paperSize[0] * mapScale / 100.;
+    mapSizeY = paperSize[1] * mapScale / 100.;
+
+    // Convert Map Center coordinates into spherical mercator metres.
+    var source = new Proj4js.Proj('EPSG:4326');
+    var dest = new Proj4js.Proj('EPSG:900913'); 
+    mapCenterLatLng = JE.map.getCenter();
+    var mapCenter = new L.Point(mapCenterLatLng.lng,mapCenterLatLng.lat)
+    Proj4js.transform(source,dest,mapCenter);
+
+    // Calculate the bounds of the map in spherical mercator metres.
+    minX = mapCenter.x - mapSizeX * 0.5;
+    maxX = mapCenter.x + mapSizeX * 0.5;
+    minY = mapCenter.y - mapSizeY * 0.5;
+    maxY = mapCenter.y + mapSizeY * 0.5;
+
+    // Calculate lat,lon points for the corners of the bounding box,
+    // and add them to an array.
+    llArr = [];
+    p = new L.Point(minX,minY);
+    Proj4js.transform(dest,source,p);
+    //alert("transformed p="+p);
+    llArr[0] = new L.LatLng(p.y,p.x);
+    p = new L.Point(minX,maxY);
+    Proj4js.transform(dest,source,p);
+    llArr[1] = new L.LatLng(p.y,p.x);
+    p = new L.Point(maxX,maxY);
+    Proj4js.transform(dest,source,p);
+    llArr[2] = new L.LatLng(p.y,p.x);
+    p = new L.Point(maxX,minY);
+    Proj4js.transform(dest,source,p);
+    llArr[3] = new L.LatLng(p.y,p.x);
+    p = new L.Point(minX,minY);
+    Proj4js.transform(dest,source,p);
+    llArr[4] = new L.LatLng(p.y,p.x);
+
+    // Add a polyline to the map to show the map bounds.
+    if (typeof JE.polyline != 'undefined') {
+	JE.map.removeLayer(JE.polyline);
+    }
+    JE.polyline = new L.Polyline(llArr, {color: 'red'});
+    JE.map.addLayer(JE.polyline);
+    
+
+    /////////////////////////////////////////////
+    // Put a smal circle at the centre of the map
     JE.map.removeLayer(JE.mapCenterMarker);
     JE.mapCenterMarker = new L.Circle(JE.map.getCenter(),10);
     JE.map.addLayer(JE.mapCenterMarker);
@@ -252,7 +301,7 @@ function updatePermalink() {
     z = JE.map.getZoom();
     queryPart = "?lat="+lat+"&lon="+lon+"&z="+z;
     jQuery('#permaLink').attr('href',baseURL+queryPart); 
-
+    //drawMapCenterMarker();
 }
 
 function initialiseFromJSON(jobNo) {
@@ -345,6 +394,9 @@ function initialise_jobEditor() {
     });
     jQuery('#mapCenterLon').change(setMapCenter);
     jQuery('#mapCenterLat').change(setMapCenter);
+    jQuery('#mapScaleSelect').change(updateMapCenterTextBoxes);
+    jQuery('#paperSizeSelect').change(updateMapCenterTextBoxes);
+    jQuery('#paperOrientationSelect').change(updateMapCenterTextBoxes);
     JE.map.on('dragend',updateMapCenterTextBoxes);
     JE.map.addEventListener('moveend',updatePermalink);
     JE.map.addEventListener('zoomend',updatePermalink);
