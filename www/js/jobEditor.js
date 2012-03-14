@@ -27,6 +27,14 @@ JE.jobNo = -1;                    // Job number to use to configure default
 //                                    user interface state.
 JE.map;                   // the map object
 
+// Paper sizes in cm.
+JE.paperSizes = {'A5':[7,10],
+             'A4':[14,20],
+             'A3':[28,40],
+             'A2':[56,80],
+             'A1':[112,160],
+             'A0':[224,320]}
+
 $(document).ready(function(){
           initialise_jobEditor();
 });
@@ -190,6 +198,22 @@ function submitSuccessCallback(data, textStatus,jqXHR) {
 
 // Put a marker in the centre of the map to help the user align it.
 function drawMapCenterMarker() {
+    var paperSizeStr, paperSize, paperOrientation;
+    var mapScale;
+    var mapCenter;
+    var tmp;
+    paperSizeStr = jQuery("#paperSizeSelect").val();
+    paperOrientationStr = jQuery("#paperOrientationSelect").val();
+    mapScale = jQuery("#mapScaleSelect").val();
+    paperSize = JE.paperSizes[paperSizeStr];
+    if (paperOrientationStr=='landscape') {
+	tmp = paperSize[1];
+	paperSize[1]=paperSize[0];
+	paperSize[0]=tmp;
+    }
+    //alert("paperSize=("+paperSize[0]+","+paperSize[1]+"), "+paperOrientationStr);
+    mapCenter = JE.map.latLngToLayerPoint(JE.map.getCenter());
+    //alert("mapCenter="+mapCenter);
     JE.map.removeLayer(JE.mapCenterMarker);
     JE.mapCenterMarker = new L.Circle(JE.map.getCenter(),10);
     JE.map.addLayer(JE.mapCenterMarker);
