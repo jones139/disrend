@@ -25,15 +25,15 @@ JE.lon = -1.9253;                    // Initial longitude of centre of map.
 JE.zoom = 10;                      // Initial zoom level.
 JE.jobNo = -1;                    // Job number to use to configure default
 //                                    user interface state.
-JE.map;                   // the map object
+JE.map = 0;                   // the map object
 
 // Paper sizes in cm.
-JE.paperSizes = {'A5':[7,10],
-             'A4':[14,20],
-             'A3':[28,40],
-             'A2':[56,80],
-             'A1':[112,160],
-             'A0':[224,320]}
+JE.paperSizes = {'A5': [7, 10],
+		 'A4': [14, 20],
+		 'A3': [28, 40],
+		 'A2': [56, 80],
+		 'A1': [112, 160],
+		 'A0': [224, 320]}
 
 $(document).ready(function(){
           initialise_jobEditor();
@@ -198,10 +198,9 @@ function submitSuccessCallback(data, textStatus,jqXHR) {
 
 // Put a marker in the centre of the map to help the user align it.
 function drawMapCenterMarker() {
-    var paperSizeStr, paperSize, paperOrientation;
+    var paperSizeStr, paperSize, paperOrientationStr;
     var mapScale;
     var mapCenter;
-    var tmp;
     var minLon,maxLon;
     var minLat,maxLat;
     var minX,maxX,minY,maxY;
@@ -210,11 +209,14 @@ function drawMapCenterMarker() {
     paperSizeStr = jQuery("#paperSizeSelect").val();
     paperOrientationStr = jQuery("#paperOrientationSelect").val();
     mapScale = jQuery("#mapScaleSelect").val();
-    paperSize = JE.paperSizes[paperSizeStr];
+
+    paperSize = [];
     if (paperOrientationStr=='landscape') {
-	tmp = paperSize[1];
-	paperSize[1]=paperSize[0];
-	paperSize[0]=tmp;
+	paperSize[1]=JE.paperSizes[paperSizeStr][0];
+	paperSize[0]=JE.paperSizes[paperSizeStr][1];
+    } else {
+	paperSize[1]=JE.paperSizes[paperSizeStr][1];
+	paperSize[0]=JE.paperSizes[paperSizeStr][0];
     }
     // Calculate the size of area covered by map, in metres.
     mapSizeX = paperSize[0] * mapScale / 100.;
