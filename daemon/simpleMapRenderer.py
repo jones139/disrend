@@ -117,17 +117,17 @@ def simpleMapRenderer(jobCfg,sysCfg):
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)
     m.zoom_to_box(bbox)
     im = cairo.PDFSurface(outputFname,imgx,imgy)
-    cr = cairo.Context(im)
+    #cr = cairo.Context(im)
     mapnik.render(m, im)
 
     attrStr = "Map Data Copyright OpenStreetmap Contributors, 2012"
-    cr.set_source_rgb(0.0, 0.0, 0.0)
-    cr.select_font_face("Georgia",
-                        cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-    cr.set_font_size(10.)
-    x_bearing, y_bearing, width, height = cr.text_extents("attStr")[:4]
-    cr.move_to(0.5 - width / 2 - x_bearing, 0.5 - height / 2 - y_bearing)
-    cr.show_text("attStr")
+    #cr.set_source_rgb(0.0, 0.0, 0.0)
+    #cr.select_font_face("Georgia",
+    #                    cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    #cr.set_font_size(10.)
+    #x_bearing, y_bearing, width, height = cr.text_extents("attStr")[:4]
+    #cr.move_to(0.5 - width / 2 - x_bearing, 0.5 - height / 2 - y_bearing)
+    #cr.show_text("attStr")
 
     im.finish()
 

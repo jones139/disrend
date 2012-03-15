@@ -95,7 +95,8 @@ class dataMgr:
         tileSet = downloader.getTileSet(ll)
         print tileSet
 
-        os.makedirs(srtmTmpDir)
+        if not os.path.exists(srtmTmpDir):
+            os.makedirs(srtmTmpDir)
         os.chdir(srtmTmpDir)
         for tileFname in tileSet:
             fnameParts = tileFname.split("/")
