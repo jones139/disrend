@@ -73,10 +73,11 @@ def simpleMapRenderer(jobCfg,sysCfg):
         hillshadeFile="%s/%s" % (jobCfg['jobDir'],'hillshade.tiff')
         print "hillshadeFile=%s" % hillshadeFile
         ds = mapnik.Gdal(base=jobCfg['jobDir'],file=hillshadeFile.encode('utf-8'))
-        ds.opacity = 0.1
+        ds.opacity = 0.5
         lyr.datasource = ds
         lyr.styles.append('hillshade')
-        m.layers.append(lyr)
+        #m.layers.append(lyr)
+        m.layers[7:7]=lyr
 
     if (jobCfg['contours']):
         style = mapnik.Style()
@@ -90,7 +91,8 @@ def simpleMapRenderer(jobCfg,sysCfg):
         lyr = mapnik.Layer('contours')
         lyr.datasource = mapnik.Shapefile(file=contourFile.encode('utf-8'))
         lyr.styles.append('contours')
-        m.layers.append(lyr)
+        #m.layers.append(lyr)
+        m.layers[8:8]=lyr
 
 
     if (jobCfg['grid']):
@@ -108,10 +110,10 @@ def simpleMapRenderer(jobCfg,sysCfg):
         lyr.styles.append('grid')
         m.layers.append(lyr)
         
-    #i = 0
-    #for lyr in m.layers:
-    #    print i,lyr.name
-    #    i=i+1
+    i = 0
+    for lyr in m.layers:
+        print i,lyr.name
+        i=i+1
 
 
     bbox = mapnik.Box2d(c0.x,c0.y,c1.x,c1.y)

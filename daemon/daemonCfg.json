@@ -6,7 +6,7 @@
   "dbname" : "osm_gb",
   "dbuser" : "graham",
   "dbpass" : "1234",
-  "osmMapnikStyleFile" : "/home/disk2/OSM/mapnik_osm/osm.xml",
+  "osmMapnikStyleFile" : "/usr/local/printmaps/mapStyles/defaultOSM/osm.xml",
   "mapbook":"/home/disk2/OSM/code/mapbook/mapbook.py",
   "world_boundaries":"/home/OSM/data/mapdata/world_boundaries",
   "osm_db":  {
