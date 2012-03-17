@@ -2,6 +2,7 @@ import mapnik2 as mapnik
 import cairo
 from paperSize import getPaperSize
 from getProjStr import getProjStr
+import os,fnmatch
 
 def simpleMapRenderer(jobCfg,sysCfg):
     print "simpleMapRenderer"
@@ -61,6 +62,21 @@ def simpleMapRenderer(jobCfg,sysCfg):
     mapnik.load_map(m,styleFname)
 
     if (jobCfg['hillshade']):
+        ######################################
+        # First get list of all the hillshade 
+        # files in the job directory
+        hillshadeFiles = []
+        for file in os.listdir(jobCfg['jobDir']):
+            if fnmatch.fnmatch(file,'*.hillshade.tiff'):
+                print "found hillshade file %s\n" % file
+                hillshadeFiles.append(file)
+
+        if len(hillshadeFiles) == 0:
+            print "*******ERROR - NO HILLSHADE FILES *****"
+            print "* Will carry on anyway..."
+
+        #############################################
+        # Now add a mapnik style for the hillshading
         style = mapnik.Style()
         rule = mapnik.Rule()
         rs = mapnik.RasterSymbolizer()
@@ -68,32 +84,56 @@ def simpleMapRenderer(jobCfg,sysCfg):
         rule.symbols.append(rs)
         style.rules.append(rule)
         m.append_style('hillshade',style)
-        lyr = mapnik.Layer('hillshade')
-        lyr.srs="+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m"
-        hillshadeFile="%s/%s" % (jobCfg['jobDir'],'hillshade.tiff')
-        print "hillshadeFile=%s" % hillshadeFile
-        ds = mapnik.Gdal(base=jobCfg['jobDir'],file=hillshadeFile.encode('utf-8'))
-        ds.opacity = 0.5
-        lyr.datasource = ds
-        lyr.styles.append('hillshade')
-        #m.layers.append(lyr)
-        m.layers[7:7]=lyr
+        ############################################
+        # And a layer for each hillshade file
+        i=0
+        for file in hillshadeFiles:
+            lyr = mapnik.Layer('hillshade-%d' % i)
+            lyr.srs="+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m"
+            hillshadeFile="%s/%s" % (jobCfg['jobDir'],file)
+            print "hillshadeFile=%s" % (hillshadeFile)
+            ds = mapnik.Gdal(base=jobCfg['jobDir'],file=hillshadeFile.encode('utf-8'))
+            ds.opacity = 0.5
+            lyr.datasource = ds
+            lyr.styles.append('hillshade')
+            # m.layers.append(lyr)
+            m.layers[7:7]=lyr
+            i = i+1
 
     if (jobCfg['contours']):
+        ######################################
+        # First get list of all the contours 
+        # files in the job directory
+        contourFiles = []
+        for file in os.listdir(jobCfg['jobDir']):
+            if fnmatch.fnmatch(file,'*.contours.shp'):
+                print "found contours file %s\n" % file
+                contourFiles.append(file)
+
+        if len(contourFiles) == 0:
+            print "*******ERROR - NO CONTOUR FILES *****"
+            print "* Will carry on anyway..."
+
+        #############################################
+        # Now add a mapnik style for the contours
         style = mapnik.Style()
         rule = mapnik.Rule()
         contourlines = mapnik.LineSymbolizer(mapnik.Color('green'),0.1)
         rule.symbols.append(contourlines)
         style.rules.append(rule)
         m.append_style('contours',style)
-        contourFile="%s/%s" % (jobCfg['jobDir'],'contours.shp')
-        print "contourFile=%s\n" % contourFile
-        lyr = mapnik.Layer('contours')
-        lyr.datasource = mapnik.Shapefile(file=contourFile.encode('utf-8'))
-        lyr.styles.append('contours')
+        ############################################
+        # And a layer for each hillshade file
+        i = 0
+        for file in contourFiles:
+            contourFile="%s/%s" % (jobCfg['jobDir'],file)
+            print "contourFile=%s\n" % contourFile
+            lyr = mapnik.Layer('contours-%d' % i)
+            lyr.datasource = mapnik.Shapefile(file=contourFile.encode('utf-8'))
+            lyr.styles.append('contours')
         #m.layers.append(lyr)
-        m.layers[8:8]=lyr
-
+            m.layers[8:8]=lyr
+            i = i + 1
 
     if (jobCfg['grid']):
         style = mapnik.Style()

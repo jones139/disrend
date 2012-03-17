@@ -15,6 +15,8 @@ class dataMgr:
         self.sysCfg = sysCfg
         print sysCfg
 
+        self.shpExt = ["shp","prj","shx","dbf"]
+
     def setBbox(self,jobCfg):
         """Calculates the lat-lon bounding box, setting jobCfg['ll']
         to contain the bounding box.  Uses the map centre specified as
@@ -98,32 +100,72 @@ class dataMgr:
         if not os.path.exists(srtmTmpDir):
             os.makedirs(srtmTmpDir)
         os.chdir(srtmTmpDir)
-        for tileFname in tileSet:
-            fnameParts = tileFname.split("/")
-            fname = fnameParts[-1]
-            print tileFname,fname
-            os.symlink("%s" % (tileFname),
+        for tileFnameZip in tileSet:
+            tileFname = tileFnameZip.split(".zip")[0]
+            fnameZipParts = tileFnameZip.split("/")
+            # The compressed file, without the path
+            fname = fnameZipParts[-1]
+            print tileFnameZip,fname
+            os.chdir(sysCfg['srtmDir'])
+
+            ######################################################
+            # Get the pre-generated contours shapefile for this 
+            # srtm tile if it exists.
+            contourFname = "%s%s" % (tileFname,".contours.shp")
+            print "contourFname=%s" % contourFname
+            if not os.path.exists(contourFname):
+                print "contour File does not exist - creating..."
+                os.chdir(sysCfg['srtmDir'])
+                print tileFnameZip,fname
+                # uncompress the raw srtm file.
+                if not os.path.exists(tileFname):
+                    os.system("unzip %s" % (tileFnameZip))
+
+                print "Generating Contour Lines...."
+                os.system("gdal_contour -i 10 -snodata 32767 -a height %s %s" %
+                          (tileFname,contourFname))
+            os.chdir(srtmTmpDir)
+            # create symbolic link to contours shape file.
+            print "Linking contours file"
+            contourFnameBase = contourFname.split(".shp")[0]
+            fnameBase = contourFnameBase.split("/")[-1]
+            for ext in self.shpExt:
+                fname = "%s.%s" % (fnameBase,ext)
+                if os.path.exists(fname):
+                    os.remove(fname)
+                os.symlink("%s.%s" % (contourFnameBase,ext),
+                           "%s" % (fname))
+            ###############################################################
+            # Get the pre-generated hillshade .tiff file if it exists.
+            hillshadeFname = "%s%s" % (tileFname,".hillshade.tiff")
+            print "hillshadeFname=%s" % hillshadeFname
+            if not os.path.exists(hillshadeFname):
+                print "hillshade File does not exist - creating..."
+                # uncompress the raw srtm file.
+                if not os.path.exists(tileFname):
+                    os.system("unzip %s" % (tileFnameZip))
+                print "Generating Hillshade file...."
+                print "Generating Hillshading overlay image...."
+                print "      re-projecting SRTM data to map projection..."
+                os.system("gdalwarp -of GTiff -co \"TILED=YES\" -srcnodata 32767 -t_srs \"+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m\" -rcs -order 3 -tr 30 30 -multi %s %s" % (tileFname,mergeTif))
+                print "      generating hillshade image...."
+                os.system("hillshade  %s %s -z 2" % (mergeTif,hillshadeFname))
+                # Remove the temporary reprojected geotiff.
+                os.remove(mergeTif)
+
+            os.chdir(srtmTmpDir)
+            # create symbolic link hillshade tiff file.
+            print "Linking hillshade file"
+            fname = hillshadeFname.split("/")[-1]
+            if os.path.exists(fname):
+                os.remove(fname)
+            os.symlink("%s" % (hillshadeFname),
                        "%s" % (fname))
-            os.system("unzip %s" % (fname))
-            os.remove(fname)
 
-        # Now merge the individual srtm tiles into a single big one.
-        mergeCmd = "gdal_merge.py -o %s " % mergeHgt
-        fileList = os.listdir(".")
-        for fname in fileList:
-            mergeCmd = "%s %s" % (mergeCmd,fname)
-        print mergeCmd
-        os.system(mergeCmd)
-
-        print "Generating Contour Lines...."
-        os.system("gdal_contour -i 10 -snodata 32767 -a height %s %s" %
-                  (mergeHgt,contoursShp))
-
-        print "Generating Hillshading overlay image...."
-        print "      re-projecting SRTM data to map projection..."
-        os.system("gdalwarp -of GTiff -co \"TILED=YES\" -srcnodata 32767 -t_srs \"+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m\" -rcs -order 3 -tr 30 30 -multi %s %s" % (mergeHgt,mergeTif))
-        print "      generating hillshade image...."
-        os.system("hillshade  %s %s -z 2" % (mergeTif,hillshadeTif))
+            # Remove the uncompressed raw srtm tile from the cache.
+            if os.path.exists(tileFname):
+                print "removing uncompressed srtm file from cache..."
+                os.remove("%s" % (tileFname))
 
         os.chdir(origWd)
 
