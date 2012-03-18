@@ -8,13 +8,14 @@
 </head>
 <body>
   <div id="header">
-    <h1>OSM Print Maps</h2>
+    <h1>OSM Print Maps - NOTE: ONLY BITS OF THIS WORK AT THE MOMENT!</h2>
   </div> <!--header-->
   <div id="tabs">
     <ul>
       <li><a href="#tabs-1">Job Editor</a></li>
       <li><a href="#tabs-2">Output</a></li>
       <li><a href="#tabs-3">Admin</a></li>
+      <li><a href="#tabs-4">About</a></li>
     </ul>
     
     <div id='tabs-1'>
@@ -136,8 +137,75 @@
       </div>
     </div>
     
-    <div id='tabs-3'>
+    <div id='tabs-3'> <!--Admin Pane-->
       tabs-3
+    </div>
+
+    <div id='tabs-4'> <!--About Pane -->
+      <h2>Warning - This site is a work in progress - some bits will not work</h2>
+      <p>Working things should be:
+	<ol>
+	  <li>Simple Map output (not townguide or mapbook)</li>
+	  <li>Default OSM map style</li>
+	  <li>Hillshading, contours and grid map style options</li>
+	</ol>
+      </p>
+      <h2>OSM Print Maps</h2>
+      <p>This web application allows a user to create printable maps of 
+	<a href="http://openstreetmap.org">OpenStreetMap</a> data.</p>
+      <p>When finished, the application will allow a user to select several
+	different types of output from simple, single page maps, posters
+	showing points of interest, or map books with a large area split over
+	several printed pages.
+      </p>
+      <p>The user selects the paper size and orientation, then drags the
+	map in the Job Editor to show which area they would like a map for.
+	The Map Style options allow the user to select the map style.
+	currently only the default OpenStreetMap style is supported, but
+	others will be added later.  The user can also 
+	select if they would like 
+	contour lines, hill shading or a grid adding to the map.
+      </p>
+      <h2>How it Works</h2>
+      <p>
+	The source code for the entire application is available on 
+	<a href="http://www.github.com/jones139/disrend">GitHub</a>.
+      </p>
+      <p>
+	The system comprises three distinct components:
+	<ol>
+	  <li>Web Front End - the job editor, which is a javascript application
+	    which runs in a web browser, and adds map request rendering
+	    jobs to a queue ready for processing.
+	  </li>
+	  <li>Queue API - The application programming interface (API) that
+	    handles the queue of jobs that need to be rendered into pdf maps.
+	    This runs on the web server that also serves the job editor web 
+	    front end.  This is written in php, and uses a mySql database
+	    so it will run on most commercial web hosting services.
+	  </li>
+	  <li>Job Processor Daemon - a programme that runs on a computer
+	    that periodically asks the Queue API if there are any job 
+	    rendering tasks in the queue.  If there is, it downloads the 
+	    request and processes it into a PDF map.  It then uses the 
+	    queue API to upload the results to the web server so they can
+	    be accessed by the user.
+	  </li>
+	</ol>
+      </p>
+
+      <p>Although not implemented yet, the intention is that the system will
+	support several job Processor Daemons, running on different computers.
+	This will be useful to allow lower power computers to be used - 
+	different people could maintain job processors that have databases
+	of different areas - if enough computers are involved, global coverage
+	could be achieved.
+      </p>
+	       
+      <h2>Contact</h2>
+      <p>If you have any queries (or would like to help get it working
+	properly!), pease contact 
+      <a href="mailto:grahamjones139@gmail.com">Graham Jones</a>.</p>
     </div>
 
 

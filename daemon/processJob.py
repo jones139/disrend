@@ -73,59 +73,62 @@ class jobProcessor:
 
         if (jobNo > 0):
             print "processing Job Number %d" % jobNo
-            if (not self.qm.claimJob(jobNo)):
-                print "Error Claiming Job - aborting..."
-            else:
-                print "job Claimed"
-                self.jobCfg = self.qm.getJobConfig(jobNo)
-                self.jobCfg['jobNo'] = jobNo
-                self.setupJobDir(jobNo)
-                self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
-                self.dm.setBbox(self.jobCfg)
-                self.dm.getOSMData(self.jobCfg)
+            try:
+                if (not self.qm.claimJob(jobNo)):
+                    print "Error Claiming Job - aborting..."
+                else:
+                    print "job Claimed"
+                    self.jobCfg = self.qm.getJobConfig(jobNo)
+                    self.jobCfg['jobNo'] = jobNo
+                    self.setupJobDir(jobNo)
+                    self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
+                    self.dm.setBbox(self.jobCfg)
+                    self.dm.getOSMData(self.jobCfg)
 
-                if (self.jobCfg['contours'] or 
-                    self.jobCfg['hillshade']):
-                    #pass
-                    self.dm.getSRTMData(self.sysCfg,self.jobCfg)
-                if (self.jobCfg['grid']):
-                    self.dm.getGridData(self.jobCfg)
-                self.dm.getMapnikStyleFile(self.jobCfg)
-                print self.jobCfg['mapnikStyleFile']
+                    if (self.jobCfg['contours'] or 
+                        self.jobCfg['hillshade']):
+                        #pass
+                        self.dm.getSRTMData(self.sysCfg,self.jobCfg)
+                    if (self.jobCfg['grid']):
+                        self.dm.getGridData(self.jobCfg)
+                    self.dm.getMapnikStyleFile(self.jobCfg)
+                    print self.jobCfg['mapnikStyleFile']
 
-                if (self.jobCfg['renderer']=="0"):
-                    print "calling simple map renderer"
-                    self.renderSimpleMap(jobNo)
-                elif (self.jobCfg['renderer']=="1"):
-                    print "calling towngude renderer"
-                    self.renderTownguide(jobNo)
-                elif (self.jobCfg['renderer']=="2"):
-                    print "calling mapbook renderer"
-                    self.renderMapbook(jobNo)
+                    if (self.jobCfg['renderer']=="0"):
+                        print "calling simple map renderer"
+                        self.renderSimpleMap(jobNo)
+                    elif (self.jobCfg['renderer']=="1"):
+                        print "calling towngude renderer"
+                        self.renderTownguide(jobNo)
+                    elif (self.jobCfg['renderer']=="2"):
+                        print "calling mapbook renderer"
+                        self.renderMapbook(jobNo)
 
-                outputFname = str("%s/%s" % \
-                                      (self.jobCfg['jobDir'],
-                                       self.jobCfg['outputFname']))
-                self.qm.uploadFile(jobNo,
-                                   outputFname,
-                                   self.qm.FILE_OUTPUT)
-
-
-                thumbnailFname = str("%s/%s" % \
-                                      (self.jobCfg['jobDir'],
-                                       "thumbnail.png"))
-                convertStr = "convert -scale 100 %s %s" % (outputFname,
-                                                           thumbnailFname)
-                print "Creating thumbnail using: %s" % convertStr
-                os.system(convertStr)
-                
-                self.qm.uploadFile(jobNo,
-                                   thumbnailFname,
-                                   self.qm.FILE_THUMB)
+                    outputFname = str("%s/%s" % \
+                                          (self.jobCfg['jobDir'],
+                                           self.jobCfg['outputFname']))
+                    self.qm.uploadFile(jobNo,
+                                       outputFname,
+                                       self.qm.FILE_OUTPUT)
 
 
-                self.qm.setJobStatus(jobNo,self.qm.STATUS_COMPLETE)
-                
+                    thumbnailFname = str("%s/%s" % \
+                                          (self.jobCfg['jobDir'],
+                                           "thumbnail.png"))
+                    convertStr = "convert -scale 100 %s %s" % (outputFname,
+                                                               thumbnailFname)
+                    print "Creating thumbnail using: %s" % convertStr
+                    os.system(convertStr)
+
+                    self.qm.uploadFile(jobNo,
+                                       thumbnailFname,
+                                       self.qm.FILE_THUMB)
+
+
+                    self.qm.setJobStatus(jobNo,self.qm.STATUS_COMPLETE)
+            except:
+                self.qm.setJobStatus(jobNo,self.qm.STATUS_FAILED)
+                print "Job Failed!"
 
 
         else:
