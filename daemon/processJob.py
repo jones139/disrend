@@ -1,4 +1,4 @@
-import json,os
+import json,os,sys
 from pyproj import Proj
 from queueMgr import queueMgr
 from dataMgr import dataMgr
@@ -83,7 +83,7 @@ class jobProcessor:
                     self.setupJobDir(jobNo)
                     self.qm.setJobStatus(jobNo,self.qm.STATUS_RENDERING)
                     self.dm.setBbox(self.jobCfg)
-                    self.dm.getOSMData(self.jobCfg)
+                    self.dm.getOSMData(self.sysCfg,self.jobCfg)
 
                     if (self.jobCfg['contours'] or 
                         self.jobCfg['hillshade']):
@@ -129,6 +129,9 @@ class jobProcessor:
             except:
                 self.qm.setJobStatus(jobNo,self.qm.STATUS_FAILED)
                 print "Job Failed!"
+                print "Unexpected error:", sys.exc_info()
+                raise
+                
 
 
         else:

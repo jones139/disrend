@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import urllib2
+import os, sys
 
 #functions - from http://old.nabble.com/Download-file-via-HTTP-GET-with-progress-monitoring---custom-headers--td18917651.html
 
@@ -66,16 +67,14 @@ def httpDownload(url, filename, headers=None, reporthook=None, postData=None):
 
 
 
-def downloadOsmData(ll):
+def downloadOsmData(sysCfg,jobCfg):
     '''
     Downloads OSM Data from the jxapi server and imports it into postgresql.
     '''
-
-
     # XAPI Server
     print 'Using OSM JXAPI Server for data download'
     url="http://jxapi.openstreetmap.org/xapi/api/0.6/map?bbox=%f,%f,%f,%f" %\
-        (ll)
+        (jobCfg['ll'])
     headers = {
         'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
         'Accept' :
@@ -85,22 +84,16 @@ def downloadOsmData(ll):
         }
 
 
-    osmFile = "tmp.osm" 
+    osmFile = "%s/tmp.osm" % (jobCfg['jobDir'])
 
     httpDownload(url, osmFile, headers, reportDownloadProgress)
-
-    #f = urllib.urlopen(url)
-    #print f.read()
-
-        #os.system("wget %s -O %s" % (url,osmFile))
 
     if os.path.exists(osmFile):
         try:
             print 'Importing data into postgresql database....'
-            osm2pgsqlStr = "osm2pgsql -m -S %s/%s -d %s -a %s" %\
-                (self.preferences_list['datadir'],
-                 "default.style",
-                 self.preferences_list['dbname'],
+            osm2pgsqlStr = "osm2pgsql -m -S %s -d %s %s" %\
+                (sysCfg['default.style'],
+                 sysCfg['osm_db']['dbname'],
                  osmFile)
             print "Calling osm2pgsql with: %s" % osm2pgsqlStr
             retval = os.system(osm2pgsqlStr)
@@ -111,11 +104,11 @@ def downloadOsmData(ll):
                 # system.exit(-1)
         except:
             print "Exception Occurred running osm2pgsql"
-            system.exit(-1)
+            raise
     else:
         print "ERROR:  Failed to download OSM data"
         print "Aborting...."
-        system.exit(-1)
+        raise
 
 
 if __name__ == "__main__":

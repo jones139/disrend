@@ -4,6 +4,7 @@ dataMgr - manages map data ready for rendering using mapnik.
 
 import srtm
 import createGridShapefile
+import downloadOsmData
 import os
 import paperSize
 import getProjStr
@@ -59,8 +60,10 @@ class dataMgr:
         jobCfg['ll'] = ll
 
 
-    def getOSMData(self,jobCfg):
+    def getOSMData(self,sysCfg,jobCfg):
         print "getOSMData"
+        print "ll=",jobCfg['ll']
+        downloadOsmData.downloadOsmData(sysCfg,jobCfg)
 
     def getSRTMData(self,sysCfg,jobCfg):
         """ Downloads SRTM data, converts it to contours, and uploads
