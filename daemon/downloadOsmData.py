@@ -1,5 +1,4 @@
 #!/usr/bin/python
-#!/usr/bin/python
 #
 #    This file is part of printmaps - a simple utility to produce a
 #    printable (pdf) maps from OpenStreetMap data.
@@ -19,14 +18,13 @@
 #
 #    Copyright Graham Jones 2009, 2010, 2012
 #
-import urllib2
+#functions - from http://old.nabble.com/Download-file-via-HTTP-GET-with-progress-monitoring---custom-headers--td18917651.htmlimport urllib2
+#
 import os, sys
-
-#functions - from http://old.nabble.com/Download-file-via-HTTP-GET-with-progress-monitoring---custom-headers--td18917651.html
 
 def reportDownloadProgress(blocknum, bs, size):
     percent = int(blocknum*bs*100/size)
-    print str(blocknum*bs ) + '/' + str(size) + 'downloaded| ' + str(percent) + '%'
+    print str(blocknum*bs ) + '/' + str(size) + 'downloaded | ' + str(percent) + '%'
    
 def httpDownload(url, filename, headers=None, reporthook=None, postData=None):
     reqObj = urllib2.Request(url, postData, headers)
@@ -76,22 +74,10 @@ def httpDownload(url, filename, headers=None, reporthook=None, postData=None):
 
     return result
    
-   
-   
-
-
-
-#test it
-
-
-
-
-
 def downloadOsmData(sysCfg,jobCfg):
     '''
     Downloads OSM Data from the jxapi server and imports it into postgresql.
     '''
-    # XAPI Server
     print 'Using OSM JXAPI Server for data download'
     url="http://jxapi.openstreetmap.org/xapi/api/0.6/map?bbox=%f,%f,%f,%f" %\
         (jobCfg['ll'])
@@ -124,12 +110,14 @@ def downloadOsmData(sysCfg,jobCfg):
                 # system.exit(-1)
         except:
             print "Exception Occurred running osm2pgsql"
-            raise
+            print sys.exc_info()
+            print "This means that the map is not likely to look right..."
     else:
         print "ERROR:  Failed to download OSM data"
         print "Aborting...."
-        raise
+        print "Unexpected error:", sys.exc_info()
 
+    print "downloadOsmData Complete."
 
 if __name__ == "__main__":
     ll = (-2,54,-1,55)
