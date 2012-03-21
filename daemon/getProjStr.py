@@ -1,3 +1,23 @@
+#!/usr/bin/python
+#
+#    This file is part of printmaps - a simple utility to produce a
+#    printable (pdf) maps from OpenStreetMap data.
+#
+#    Printmaps is free software: you can redistribute it and/or modify
+#    it under ther terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Printmaps is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with townguide.  If not, see <http://www.gnu.org/licenses/>.
+#
+#    Copyright Graham Jones 2009, 2010, 2012
+#
 ##########################################################################
 def getProjStr(projection):
     '''

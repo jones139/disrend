@@ -1,14 +1,14 @@
 #!/usr/bin/python
 #
-#    This file is part of townguide - a simple utility to produce a
-#    town guide identifying key amenities from OpenStreetMap data.
+#    This file is part of printmaps - a simple utility to produce a
+#    printable (pdf) maps from OpenStreetMap data.
 #
-#    Townguide is free software: you can redistribute it and/or modify
+#    Printmaps is free software: you can redistribute it and/or modify
 #    it under ther terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Townguide is distributed in the hope that it will be useful,
+#    Printmaps is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with townguide.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Copyright Graham Jones 2009, 2010
+#    Copyright Graham Jones 2009, 2010, 2012
 #
 import os,sys
 import json
