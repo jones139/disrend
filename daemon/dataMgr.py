@@ -156,13 +156,19 @@ class dataMgr:
                 print "hillshade File does not exist - creating..."
                 # uncompress the raw srtm file.
                 if not os.path.exists(tileFname):
+                    print "uncompressing DEM file %s." % tileFnameZip
+                    os.chdir(sysCfg['srtmDir'])
                     os.system("unzip %s" % (tileFnameZip))
+                    if not os.path.exists(tileFname):
+                        print "****ERRROR - SOMETHING HAS GONE WRONG ****"
+                        print "%s still does not exist...." % (tileFname)
+                        print "it is probably in %s" % (srtmTmpDir)
                 print "Generating Hillshade file...."
                 print "Generating Hillshading overlay image...."
                 print "      re-projecting SRTM data to map projection..."
                 os.system("gdalwarp -of GTiff -co \"TILED=YES\" -srcnodata 32767 -t_srs \"+proj=merc +ellps=sphere +R=6378137 +a=6378137 +units=m\" -rcs -order 3 -tr 30 30 -multi %s %s" % (tileFname,mergeTif))
                 print "      generating hillshade image...."
-                os.system("hillshade  %s %s -z 2" % (mergeTif,hillshadeFname))
+                os.system("gdaldem hillshade  %s %s -z 2" % (mergeTif,hillshadeFname))
                 # Remove the temporary reprojected geotiff.
                 os.remove(mergeTif)
 
