@@ -21,12 +21,14 @@
 #functions - from http://old.nabble.com/Download-file-via-HTTP-GET-with-progress-monitoring---custom-headers--td18917651.htmlimport urllib2
 #
 import os, sys
+import urllib2
 
 def reportDownloadProgress(blocknum, bs, size):
     percent = int(blocknum*bs*100/size)
     print str(blocknum*bs ) + '/' + str(size) + 'downloaded | ' + str(percent) + '%'
    
 def httpDownload(url, filename, headers=None, reporthook=None, postData=None):
+    print "httpDownload - url=%s." % (url)
     reqObj = urllib2.Request(url, postData, headers)
     fp = urllib2.urlopen(reqObj)
     headers = fp.info()
