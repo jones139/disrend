@@ -24,6 +24,7 @@ from queueMgr import queueMgr
 from dataMgr import dataMgr
 from paperSize import getPaperSize
 from simpleMapRenderer import simpleMapRenderer
+from mapbookRenderer import mapbookRenderer
 
 class jobProcessor:
     def __init__(self,cfg):
@@ -53,32 +54,8 @@ class jobProcessor:
 
     def renderMapbook(self,jobNo):
         print "renderMapbook"
-        p1 = Proj(init='epsg:4326') # lat-lon
-        p2 = Proj(init='epsg:900913') # Google spherical mercator.
-        (x,y) = p2(float(self.jobCfg['mapCenterLon']),
-                   float(self.jobCfg['mapCenterLat']))
-        print (x,y)
-
-        (w,h) = getPaperSize({'size':self.jobCfg['paperSize'],
-                              'orientation':'portrait'},
-                             True)
-        print (w,h)
-        w = w * 72 / 2.5   # convert from cm to points.
-        h = h * 72 / 2.5   # convert from cm to points.
-
-        print (w,h)
-
-        cmdline = "%s --startx %f --starty %f --width %f --pagewidth %f --pageheight %f --rows %d --columns %d --mapfile %s --outputfile %s/output.pdf" % \
-            (self.sysCfg['mapbook'],
-             x,y,
-             float(self.jobCfg['mapSizeW']),
-             w,h,
-             float(5),float(5),
-             self.jobCfg['mapnikStyleFile'],
-             self.jobCfg['jobDir']
-             )
-        print cmdline
-        retval = os.system(cmdline)
+        self.jobCfg['outputFname']='output.pdf'
+        mapbookRenderer(self.jobCfg,self.sysCfg)
 
     def renderTownguide(self,jobNo):
         print "renderTownguide"
@@ -139,7 +116,7 @@ class jobProcessor:
                     thumbnailFname = str("%s/%s" % \
                                           (self.jobCfg['jobDir'],
                                            "thumbnail.png"))
-                    convertStr = "convert -scale 100 %s %s" % (outputFname,
+                    convertStr = "convert -scale 100 %s[0] %s" % (outputFname,
                                                                thumbnailFname)
                     print "Creating thumbnail using: %s" % convertStr
                     os.system(convertStr)

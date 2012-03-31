@@ -17,7 +17,7 @@
 	Copyright 2012 Paul Norman
 '''
 
-import mapnik
+import mapnik2 as mapnik
 
 import cairo
 import tempfile
@@ -31,8 +31,7 @@ class Book:
 	def __init__(self, fobj, area, appearance):
 		# Setup cairo
 		self.area = area
-		self._surface=cairo.PDFSurface(fobj,
-					       *(self.area.pagesize_points))
+		self._surface=cairo.PDFSurface(fobj,*(self.area.pagesize_points))
 		self._ctx = cairo.Context(self._surface)
 		self.appearance = appearance
 		
