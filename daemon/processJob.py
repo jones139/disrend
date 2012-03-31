@@ -105,6 +105,7 @@ class jobProcessor:
                         print "calling mapbook renderer"
                         self.renderMapbook(jobNo)
 
+                    print "Uploading main output file..."
                     outputFname = str("%s/%s" % \
                                           (self.jobCfg['jobDir'],
                                            self.jobCfg['outputFname']))
@@ -125,8 +126,9 @@ class jobProcessor:
                                        thumbnailFname,
                                        self.qm.FILE_THUMB)
 
-
+                    print "setting job status to complete..."
                     self.qm.setJobStatus(jobNo,self.qm.STATUS_COMPLETE)
+                    print "Job Done!"
             except:
                 self.qm.setJobStatus(jobNo,self.qm.STATUS_FAILED)
                 print "Job Failed!"

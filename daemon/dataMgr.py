@@ -24,6 +24,7 @@ dataMgr - manages map data ready for rendering using mapnik.
 
 import srtm
 import createGridShapefile
+import createMapnikXML
 import downloadOsmData
 import os
 import paperSize
@@ -196,8 +197,8 @@ class dataMgr:
 
     def getMapnikStyleFile(self,jobCfg):
         print "getMapnikStyleFile"
-        jobCfg['mapnikStyleFile'] = self.sysCfg['osmMapnikStyleFile']
-
+        jobCfg['baseMapnikStyleFile'] = self.sysCfg['osmMapnikStyleFile']
+        createMapnikXML.createMapnikXML(jobCfg,self.sysCfg)
         
 
 
