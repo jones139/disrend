@@ -15,9 +15,13 @@ h1 {
 
 #sidebar {
     float:left;
+    height:450px;
     padding: 0.5em;
     background-color:#e0e0e0;
     border:1px solid black;
+}
+#accordion {
+    height:400px;
 }
 
 

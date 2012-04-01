@@ -12,17 +12,25 @@
   </div> <!--header-->
   <div id="tabs">
     <ul>
-      <li><a href="#tabs-1">Job Editor</a></li>
+      <li><a href="#tabs-4">About</a></li>
+      <li><a href="#tabs-1">Create Map</a></li>
       <li><a href="#tabs-2">Output</a></li>
       <li><a href="#tabs-3">Admin</a></li>
-      <li><a href="#tabs-4">About</a></li>
     </ul>
     
     <div id='tabs-1'>
-      <div id="map">Map Goes Here</div>
+      <div id="map">
+	Map Goes Here
+      </div>
       <div id="sidebar">
 	<div id='accordion'>
-	  <h3><a href='#'>General Map Configuration</a></h3>
+	  <ul>
+	    <li><a href="#renderer">General</a></li>
+	    <li><a href="#mapstyle">Style</a></li>
+	    <li><a href="#mapbook">Mapbook</a></li>
+	    <li><a href="#advancedOptions">Advanced</a></li>
+	  </ul>
+
 	  <div id="renderer">
 	    <label>Map Title:</label>
 	    <input id="titleInput" value="Map Title">
@@ -63,9 +71,8 @@
 	      <option value='250000'>1:250000</option>
 	      <option value='500000'>1:500000</option>
 	    </select>
-	  </div>
+	  </div> <!--renderer-->
 	  
-	  <h3><a href='#'>Map Style Options</a></h3>
 	  <div id='mapstyle'>
 	    <label>Map Style:</label>
 	    <SELECT id="mapStyleSelect">
@@ -85,18 +92,13 @@
 	    <input type="checkbox" id="contourCheck" />
 	    <br/>
 	    <label for="hillshadeCheck">Include Hill Shading?</label>
-	    <input type="checkbox" id="hillshadeCheck"/>
-	    
-	  </div>
-	  <h3><a href='#'>Townguide Options</a></h3>
-	  <div id="townguide">
-	    Townguide Specific Bits
-	  </div>
-	  <h3><a href='#'>Mapbook Options</a></h3>	  
+	    <input type="checkbox" id="hillshadeCheck"/>  
+	  </div> <!--mapStyle-->
+
+
 	  <div id="mapbook">
 	    mapbook specific bits.
 	  </div>
-	  <h3><a href='#'>Advanced Options</a></h3>	  
 	  <div id="advancedOptions">
 	    <label for='outputResolutionSelect'>Output Resolution</label>
 	    <select id="outputResolutionSelect">
@@ -110,7 +112,7 @@
 	      <option selected value='merc'>Spherical Mercator</option>
 	      <option disabled value='osgb'>GB Ordnance Survey Projection</option>
 	    </select>
-	  </div>
+	  </div> <!--advancedOptions-->
 	</div> <!-- accordion -->
 	
 	<a href="" id="permaLink">PermaLink</a><br/>
@@ -143,6 +145,40 @@
 
     <div id='tabs-4'> <!--About Pane -->
       <h2>Warning - This site is a work in progress - some bits will not work</h2>
+      <h2>OSM Print Maps</h2>
+      <p>This site is a tool to create printable maps from 
+	<a href="http://www.openstreetmap.org">OpenStreetMap</a> data.
+	Three styles of output are supported:
+	<ol>
+	  <li>Simple single page maps.</li>
+	  <li>'Townguide' maps with street index and highlighted points of 
+	    interest.</li>
+	  <li>'Mapbook' atlas style booklets with a larger are split over
+	    several pages.</li>
+	</ol>
+	A number of map styles are supported, and the user can select if
+	a grid, contour lines or hill shading (relief) is required.
+	The map is produced as a PDF file which can be downloaded for printing.
+      </p>
+
+      <h2>Getting Started</h2>
+      <p>To create a map you should:
+	<ol>
+	  <li>Select the "Create Map tab" to open the editor.</li>
+	  <li>Drag and zoom the on-screen map to show the area that you wish to create a printable map for.</li>
+	  <li>In the 'General Map Configuration', select the title 
+	    and paper size to be used for the output, and the style of 
+	    output required.</li>
+	  <li>In the 'Map Style Options' select whether a grid, contour lines
+	    or hill shading is required on the map.</li>
+	  <li>Press the 'Submit Job' button to create your map.  The output will appear in the 'Output' section after a few minutes.</li>
+	</ol>
+	If you have difficulty using the site, or have suggestions for
+	improvements, please contact 
+	<a href="mailto:grahamjones139@gmail.com">Graham Jones</a>.
+      </p>
+
+      <h2>What Works?</h2>
       <p>Working things should be:
 	<ol>
 	  <li>Simple Map output (not townguide or mapbook)</li>
@@ -150,22 +186,7 @@
 	  <li>Hillshading, contours and grid map style options</li>
 	</ol>
       </p>
-      <h2>OSM Print Maps</h2>
-      <p>This web application allows a user to create printable maps of 
-	<a href="http://openstreetmap.org">OpenStreetMap</a> data.</p>
-      <p>When finished, the application will allow a user to select several
-	different types of output from simple, single page maps, posters
-	showing points of interest, or map books with a large area split over
-	several printed pages.
-      </p>
-      <p>The user selects the paper size and orientation, then drags the
-	map in the Job Editor to show which area they would like a map for.
-	The Map Style options allow the user to select the map style.
-	currently only the default OpenStreetMap style is supported, but
-	others will be added later.  The user can also 
-	select if they would like 
-	contour lines, hill shading or a grid adding to the map.
-      </p>
+
       <h2>How it Works</h2>
       <p>
 	The source code for the entire application is available on 
@@ -209,6 +230,9 @@
     </div>
 
 
+
+
+
 </div> <!--tabs-->
 
 <div id="dialog" title="My Dialog">
@@ -229,11 +253,14 @@
       show: "blind",
       hide: "explode" 
     });
-    $("#tabs").tabs();
+    //$("#accordion").accordion();
+  $("#accordion").tabs();
+    $("#tabs").tabs({selected : 0});
+    //$("#tabs").tabs();
     $("#tabs-2").tabs();
-    $("#accordion").accordion();
   });
 </script>
 </body>
 
 </html>
+

@@ -40,6 +40,8 @@ $(document).ready(function(){
 });
 
 function updateOutputListsButtonCallback() {
+    //alert("updateOutputListButtonCallback()");
+    jQuery("#accordion").accordion("refresh");
     jQuery.ajax({
 	url: "queueApi/getJobList.php",
 	context: document.body,
