@@ -166,8 +166,8 @@ function submitButtonCallback() {
     originObj.lon = jQuery("#mapCenterLon").val();
     originObj.lat = jQuery("#mapCenterLat").val();
     dataObj.origin = originObj;
-    dataObj.mapSizeW = jQuery("#mapSizeW").val();
-    dataObj.mapSizeH = jQuery("#mapSizeH").val();
+    //dataObj.mapSizeW = jQuery("#mapSizeW").val();
+    //dataObj.mapSizeH = jQuery("#mapSizeH").val();
     dataObj.mapScale = jQuery("#mapScaleSelect").val();
     dataObj.mapStyle = jQuery("#mapStyleSelect").val();
     dataObj.grid = jQuery('#gridCheck').is(':checked');
@@ -338,8 +338,8 @@ function initialiseFromJSONCallback(data, textStatus,jqXHR) {
     jQuery("#paperSizeSelect").val(dataObj.paperSize);
     jQuery("#mapCenterLon").val(dataObj.mapCenterLon);
     jQuery("#mapCenterLat").val(dataObj.mapCenterLat);
-    jQuery("#mapSizeW").val(dataObj.mapSizeW);
-    jQuery("#mapSizeH").val(dataObj.mapSizeH);
+    jQuery("#mapbookNX").val(dataObj.mapbookNX);
+    jQuery("#mapbookNY").val(dataObj.mapbookNY);
     setMapCenter();
 }
 
