@@ -42,6 +42,15 @@ def mapbookRenderer(jobCfg,sysCfg):
     styleFname = str(jobCfg['mapnikStyleFile'])
     outputFname = str("%s/%s" % \
         (jobCfg['jobDir'],jobCfg['outputFname']))
+
+    mapbookNX = 2
+    mapbookNY = 2
+    if 'mapbookNX' in jobCfg:
+        mapbookNX = int(jobCfg['mapbookNX'])
+    if 'mapbookNY' in jobCfg:
+        mapbookNY = int(jobCfg['mapbookNY'])
+
+
     print "jobNo = %d." % (jobNo)
     print "origin = (%f,%f)." % (lon,lat)
     print "scale = %f." % (scale)
@@ -60,8 +69,8 @@ def mapbookRenderer(jobCfg,sysCfg):
     # Convert origin (centre) to metres as c_origin
     c_origin = prj.forward(mapnik.Coord(lon,lat))
     # calculate top right in metres given image size and map scale.
-    mapw = scale*imgw/100.  # width of map representation in metres.
-    maph = scale*imgw/100.  # height of map representation in metres.
+    mapw = mapbookNX*scale*imgw/100.  # width of map representation in metres.
+    maph = mapbookNY*scale*imgw/100.  # height of map representation in metres.
     # c0 = bottom left corner position in metres.
     c0 = mapnik.Coord(c_origin.x - mapw/2.0,
                       c_origin.y - maph/2.0)
@@ -73,9 +82,9 @@ def mapbookRenderer(jobCfg,sysCfg):
     # Calculate the image size based on the required physical width and
     # height, and the requested resolution (img_dpi).
     #mapnik_scale_factor = img_dpi / 90.7
-    mapnik_scale_factor = 1.0
-    imgx = int(imgw * 72 / 2.54) # size in points (72nds of an inch).
-    imgy = int(imgh * 72 / 2.54) # ~
+    #mapnik_scale_factor = 1.0
+    #imgx = int(imgw * 72 / 2.54) # size in points (72nds of an inch).
+    #imgy = int(imgh * 72 / 2.54) # ~
 
     print "generating map...."
 
@@ -85,6 +94,7 @@ def mapbookRenderer(jobCfg,sysCfg):
     cmdLine += " --starty %f" % c0.y
     cmdLine += " --width %f" % mapw
     cmdLine += " --height %f" % maph
+    cmdLine += " --columns %d" % mapbookNX
     cmdLine += " --outputfile %s " % outputFname
     cmdLine += " --mapfile %s " % styleFname
 
