@@ -8,21 +8,23 @@ h1 {
 }
 #map {
     width:400px;
-    height:450px; 
+    height:400px; 
     float:left;
     border: 1px solid black;
 }
 
 #sidebar {
     float:left;
-    height:450px;
+    height:400px;
     width:400px;
     padding: 0.5em;
     background-color:#e0e0e0;
     border:1px solid black;
+    font-size:10pt;
 }
 #accordion {
     height:400px;
 }
 
+#sidebar .ui-tabs .ui-tabs-nav li a {font-size:10pt !important;}
 

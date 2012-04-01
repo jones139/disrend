@@ -176,6 +176,9 @@ function submitButtonCallback() {
     dataObj.hillshade = jQuery('#hillshadeCheck').is(':checked');
     dataObj.outputDpi = jQuery('#outputResolutionSelect').val();
     dataObj.projection = jQuery('#mapProjectionSelect').val();
+    dataObj.mapbookNX = jQuery('#mapbookNX').val();
+    dataObj.mapbookNY = jQuery('#mapbookNY').val();
+
 
     dataJSON = JSON.stringify(dataObj);
 
@@ -207,11 +210,21 @@ function drawMapCenterMarker() {
     var minLat,maxLat;
     var minX,maxX,minY,maxY;
     var ll, llArr;
+    var rendererNo;
+    var mapbookNX, mapbookNY;
 
     paperSizeStr = jQuery("#paperSizeSelect").val();
     paperOrientationStr = jQuery("#paperOrientationSelect").val();
     mapScale = jQuery("#mapScaleSelect").val();
-
+    // Mapbook is renderer number 2.
+    rendererNo = jQuery('#rendererSelect').val();
+    if (rendererNo == 2) {
+	mapbookNX = parseInt(jQuery('#mapbookNX').val());
+	mapbookNY = parseInt(jQuery('#mapbookNY').val());
+    } else {
+	mapbookNX = 1;
+	mapbookNY = 1;
+    }
     paperSize = [];
     if (paperOrientationStr=='landscape') {
 	paperSize[1]=JE.paperSizes[paperSizeStr][0];
@@ -221,8 +234,8 @@ function drawMapCenterMarker() {
 	paperSize[0]=JE.paperSizes[paperSizeStr][0];
     }
     // Calculate the size of area covered by map, in metres.
-    mapSizeX = paperSize[0] * mapScale / 100.;
-    mapSizeY = paperSize[1] * mapScale / 100.;
+    mapSizeX = mapbookNX * paperSize[0] * mapScale / 100.;
+    mapSizeY = mapbookNY * paperSize[1] * mapScale / 100.;
 
     // Convert Map Center coordinates into spherical mercator metres.
     var source = new Proj4js.Proj('EPSG:4326');
@@ -392,6 +405,39 @@ function initialise_jobEditor() {
     jQuery('#updateOutputListsButton').click(
 	updateOutputListsButtonCallback
     );
+    // Set up the +/- buttons on the Mapbook tab.
+    jQuery('#mapbookNXPlus').click(
+	function() { 
+	    var nx = parseInt(jQuery('#mapbookNX').val());
+	    if (nx<10) nx = nx + 1;
+	    jQuery('#mapbookNX').val(nx);
+	    updateMapCenterTextBoxes();
+	}
+    );
+    jQuery('#mapbookNYPlus').click(
+	function() { 
+	    var ny = parseInt(jQuery('#mapbookNY').val());
+	    if (ny<10) ny = ny + 1;
+	    jQuery('#mapbookNY').val(ny);
+	    updateMapCenterTextBoxes();
+	}
+    );
+    jQuery('#mapbookNXMinus').click(
+	function() { 
+	    var nx = parseInt(jQuery('#mapbookNX').val());
+	    if (nx>1) nx = nx - 1;
+	    jQuery('#mapbookNX').val(nx);
+	    updateMapCenterTextBoxes();
+	}
+    )
+    jQuery('#mapbookNYMinus').click(
+	function() { 
+	    var ny = parseInt(jQuery('#mapbookNY').val());
+	    if (ny>1) ny = ny - 1;
+	    jQuery('#mapbookNY').val(ny);
+	    updateMapCenterTextBoxes();
+	}
+    )
     // update the jobs list if the 'output' tab is selected.
     jQuery('#tabs').tabs({
 	select: updateOutputListsButtonCallback
@@ -401,6 +447,7 @@ function initialise_jobEditor() {
     jQuery('#mapScaleSelect').change(updateMapCenterTextBoxes);
     jQuery('#paperSizeSelect').change(updateMapCenterTextBoxes);
     jQuery('#paperOrientationSelect').change(updateMapCenterTextBoxes);
+    jQuery('#rendererSelect').change(updateMapCenterTextBoxes);
     JE.map.on('dragend',updateMapCenterTextBoxes);
     JE.map.addEventListener('moveend',updatePermalink);
     JE.map.addEventListener('zoomend',updatePermalink);
